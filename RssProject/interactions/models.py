@@ -14,3 +14,13 @@ class Comment(models.Model):
     content_object=GenericForeignKey('content_type', 'object_id')
 
 
+
+
+class Like(models.Model):
+
+    content_type =   models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object=GenericForeignKey('content_type', 'object_id')
+
+
+
