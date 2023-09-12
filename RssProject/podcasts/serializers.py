@@ -41,3 +41,31 @@ class RssPodcastChannelMetaDataSerializer(serializers.ModelSerializer):
         depth = 2
 
 
+
+
+class PodcastEpisodeDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PodcastEpisodeData
+        fields = [
+            'channel',
+            'title',
+            'description',
+            'summary',
+            'encoded_content',
+            'subtitle',
+            'keywords',
+            'episode_type',
+            'episode_number',
+            'guid',
+            'pub_date',
+            'explicit',
+            'image',
+            'duration',
+            'enclosure_url',
+            'enclosure_type',
+            'enclosure_length',
+            'comment',
+            'like',
+            'book_mark',
+            ]
+        depth = 2
