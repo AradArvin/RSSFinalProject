@@ -14,3 +14,7 @@ class RssPodcastChannelMetaDataDisplay(admin.ModelAdmin):
     pass
 
 
+
+@admin.register(PodcastEpisodeData)
+class PodcastEpisodeDataDisplay(admin.ModelAdmin):
+    pass
