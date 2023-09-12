@@ -1,4 +1,6 @@
 from django.db import models
+from interactions.models import Comment, Like, BookMark, SubScribe
+from django.contrib.contenttypes.fields import GenericRelation
 # Create your models here.
 
 
@@ -33,6 +35,7 @@ class RssPodcastChannelMetaData(models.Model):
     copy_right = models.CharField(max_length=100)
     pub_date = models.CharField(max_length=100)        # BooleanField
 
+    subscribe = GenericRelation(SubScribe)
 
 
 class PodcastEpisodeData(models.Model):
@@ -58,3 +61,6 @@ class PodcastEpisodeData(models.Model):
     enclosure_type = models.CharField(max_length=100)
     enclosure_length = models.IntegerField()
 
+    comment = GenericRelation(Comment)
+    like = GenericRelation(Like)
+    book_mark = GenericRelation(BookMark)
