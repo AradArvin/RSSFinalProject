@@ -32,3 +32,10 @@ class SubScribe(models.Model):
     content_object=GenericForeignKey('content_type', 'object_id')
 
 
+
+
+class BookMark(models.Model):
+
+    content_type =   models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object=GenericForeignKey('content_type', 'object_id')
