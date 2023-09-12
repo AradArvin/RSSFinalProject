@@ -46,6 +46,7 @@ LOCAL_APPS = [
 
 THIRDPARTY_APPS = [
     'rest_framework',
+    'debug_toolbar',
 ]
 
 
@@ -57,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -78,6 +80,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+
+
+# Internal Ip for debug tool
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 
 # Database
@@ -134,3 +143,15 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Custom user model
+
+AUTH_USER_MODEL = "accounts.CustomUser"
+# AUTHENTICATION_BACKENDS = []
+
+
+# crispy form
+
+# CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+# CRISPY_TEMPLATE_PACK = "bootstrap5"
