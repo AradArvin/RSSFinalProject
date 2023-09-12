@@ -8,3 +8,9 @@ class RssFeedSourceDisplay(admin.ModelAdmin):
     pass
 
 
+
+@admin.register(RssPodcastChannelMetaData)
+class RssPodcastChannelMetaDataDisplay(admin.ModelAdmin):
+    pass
+
+
