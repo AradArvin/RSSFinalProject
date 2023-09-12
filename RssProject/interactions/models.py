@@ -1,4 +1,5 @@
 from django.db import models
+from accounts.models import CustomUser
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
@@ -8,6 +9,7 @@ from django.contrib.contenttypes.models import ContentType
 
 class Comment(models.Model):
     opinion = models.CharField(max_length=50)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     content_type =   models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
@@ -17,6 +19,7 @@ class Comment(models.Model):
 
 
 class Like(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     content_type =   models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
@@ -26,6 +29,7 @@ class Like(models.Model):
 
 
 class SubScribe(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     content_type =   models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
@@ -35,6 +39,7 @@ class SubScribe(models.Model):
 
 
 class BookMark(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     content_type =   models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
