@@ -1,6 +1,7 @@
 from django.db import models
-from interactions.models import Comment, Like, BookMark, SubScribe
-from django.contrib.contenttypes.fields import GenericRelation
+# from interactions.models import Comment, Like, BookMark, SubScribe
+# from django.contrib.contenttypes.fields import GenericRelation
+
 # Create your models here.
 
 
@@ -45,23 +46,24 @@ class PodcastEpisodeData(models.Model):
     title = models.CharField(max_length=100)
 
     description = models.TextField()
-    summary = models.TextField()
-    encoded_content = models.TextField()
-    subtitle = models.TextField()
-    keywords = models.TextField()
+    summary = models.TextField(null=True, blank=True)
+    encoded_content = models.TextField(null=True, blank=True)
+    subtitle = models.TextField(null=True, blank=True)
+    keywords = models.TextField(null=True, blank=True)
 
-    episode_type = models.CharField(max_length=50)
-    episode_number = models.IntegerField()
+    episode_type = models.CharField(max_length=50, null=True, blank=True)
+    episode_number = models.CharField(max_length=25, null=True, blank=True)
 
-    guid = models.CharField(max_length=150)
-    pub_date = models.CharField(max_length=100)        # BooleanField
-    explicit = models.CharField(max_length=50)         # BooleanField
-    image = models.CharField(max_length=300)
-    duration = models.CharField(max_length=100)        # Time
-    enclosure_url = models.CharField(max_length=200)   # UrlField
-    enclosure_type = models.CharField(max_length=100)
-    enclosure_length = models.IntegerField()
+    guid = models.CharField(max_length=150, null=True, blank=True)
+    pub_date = models.CharField(max_length=100, null=True, blank=True)        # BooleanField
+    explicit = models.CharField(max_length=50, null=True, blank=True)         # BooleanField
+    image = models.CharField(max_length=300, null=True, blank=True)
+    duration = models.CharField(max_length=100, null=True, blank=True)        # Time
+    enclosure_url = models.CharField(max_length=200, null=True, blank=True)   # UrlField
+    enclosure_type = models.CharField(max_length=100, null=True, blank=True)
+    enclosure_length = models.CharField(max_length=25, null=True, blank=True)
 
-    comment = GenericRelation(Comment)
-    like = GenericRelation(Like)
-    book_mark = GenericRelation(BookMark)
+    # comment = GenericRelation(Comment)
+    # like = GenericRelation(Like)
+    # book_mark = GenericRelation(BookMark)
+
