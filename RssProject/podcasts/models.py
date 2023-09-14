@@ -78,3 +78,5 @@ class PodcastEpisodeData(models.Model):
     def fields(cls):
         return [ f.name for f in cls._meta.fields + cls._meta.many_to_many ]
 
+    def __str__(self) -> str:
+        return self.title
