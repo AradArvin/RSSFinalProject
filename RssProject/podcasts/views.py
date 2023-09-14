@@ -24,3 +24,13 @@ class ListRssSources(APIView):
         return Response(serializer.data)
     
 
+
+class ListRssChannels(APIView):
+
+    def get(self, request):
+        channels = RssPodcastChannelMetaData.objects.all()
+        serializer = RssPodcastChannelMetaDataSerializer(channels, many=True)
+        return Response(serializer.data)
+    
+
+
