@@ -1,6 +1,4 @@
-import requests
 import json
-import xmltodict
 from .models import RssFeedSource, RssPodcastChannelMetaData, PodcastEpisodeData
 
 
