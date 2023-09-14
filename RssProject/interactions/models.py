@@ -8,7 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 
 
 class Comment(models.Model):
-    opinion = models.CharField(max_length=50)
+    opinion = models.TextField()
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     content_type =   models.ForeignKey(ContentType)
@@ -20,7 +20,7 @@ class Comment(models.Model):
 
 class Like(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-
+    
     content_type =   models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     content_object=GenericForeignKey('content_type', 'object_id')

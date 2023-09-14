@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+
 LOCAL_APPS = [
     'core',
     'podcasts',
@@ -48,6 +49,9 @@ THIRDPARTY_APPS = [
     'rest_framework',
     'debug_toolbar',
 ]
+
+INSTALLED_APPS += LOCAL_APPS
+INSTALLED_APPS += THIRDPARTY_APPS
 
 
 MIDDLEWARE = [
@@ -147,7 +151,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom user model
 
-AUTH_USER_MODEL = "accounts.CustomUser"
+# AUTH_USER_MODEL = "accounts.CustomUser"
 # AUTHENTICATION_BACKENDS = []
 
 

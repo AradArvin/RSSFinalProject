@@ -1,11 +1,12 @@
 from django.db import models
-from interactions.models import Comment, Like, BookMark, SubScribe
-from django.contrib.contenttypes.fields import GenericRelation
+# from interactions.models import Comment, Like, BookMark, SubScribe
+# from django.contrib.contenttypes.fields import GenericRelation
+
 # Create your models here.
 
 
 
-class RssFeedSource(models.model):
+class RssFeedSource(models.Model):
     rss_link = models.CharField(max_length=200)
     parser_name = models.CharField(max_length=100)
 
@@ -15,27 +16,29 @@ class RssPodcastChannelMetaData(models.Model):
     rss_feed = models.ForeignKey(RssFeedSource, on_delete=models.CASCADE)
 
     title = models.CharField(max_length=100)
-
+    
     description = models.TextField()
-    summary = models.TextField()
-    encoded_content = models.TextField()
-    subtitle = models.TextField()
-    keywords = models.TextField()
+    summary = models.TextField(null=True, blank=True)
+    encoded_content = models.TextField(null=True, blank=True)
+    subtitle = models.TextField(null=True, blank=True)
+    keywords = models.TextField(null=True, blank=True)
+    
+    generator = models.CharField(max_length=50, null=True, blank=True)
+    language = models.CharField(max_length=50, null=True, blank=True)
+    category = models.CharField(max_length=50, null=True, blank=True)
+    link = models.CharField(max_length=300, null=True, blank=True)
+    owner = models.CharField(max_length=200, null=True, blank=True)
+    explicit = models.CharField(max_length=50, null=True, blank=True)       
+    image_url = models.CharField(max_length=400, null=True, blank=True)      
+    podcast_type = models.CharField(max_length=100, null=True, blank=True)
+    copy_right = models.CharField(max_length=100, null=True, blank=True)
+    pub_date = models.CharField(max_length=100, null=True, blank=True)      
 
-    language = models.CharField(max_length=50)
-    category = models.CharField(max_length=50)
-    link = models.CharField(max_length=300)
-    author_name = models.CharField(max_length=100)
-    author_email = models.CharField(max_length=100)    # EmailField
-    explicit = models.CharField(max_length=50)         # BooleanField
-    image_url = models.CharField(max_length=300)       # UrlField
-    image_link = models.CharField(max_length=200)      
-    image_title = models.CharField(max_length=150)      
-    podcast_type = models.CharField(max_length=100)
-    copy_right = models.CharField(max_length=100)
-    pub_date = models.CharField(max_length=100)        # BooleanField
+    # subscribe = GenericRelation(SubScribe)
 
-    subscribe = GenericRelation(SubScribe)
+    @classmethod
+    def fields(cls):
+        return [ f.name for f in cls._meta.fields + cls._meta.many_to_many ]
 
 
 class PodcastEpisodeData(models.Model):
@@ -44,23 +47,28 @@ class PodcastEpisodeData(models.Model):
     title = models.CharField(max_length=100)
 
     description = models.TextField()
-    summary = models.TextField()
-    encoded_content = models.TextField()
-    subtitle = models.TextField()
-    keywords = models.TextField()
+    summary = models.TextField(null=True, blank=True)
+    encoded_content = models.TextField(null=True, blank=True)
+    subtitle = models.TextField(null=True, blank=True)
+    keywords = models.TextField(null=True, blank=True)
 
-    episode_type = models.CharField(max_length=50)
-    episode_number = models.IntegerField()
+    episode_type = models.CharField(max_length=50, null=True, blank=True)
+    episode_number = models.CharField(max_length=25, null=True, blank=True)
 
-    guid = models.CharField(max_length=150)
-    pub_date = models.CharField(max_length=100)        # BooleanField
-    explicit = models.CharField(max_length=50)         # BooleanField
-    image = models.CharField(max_length=300)
-    duration = models.CharField(max_length=100)        # Time
-    enclosure_url = models.CharField(max_length=200)   # UrlField
-    enclosure_type = models.CharField(max_length=100)
-    enclosure_length = models.IntegerField()
+    link = models.CharField(max_length=300, null=True, blank=True)
+    guid = models.CharField(max_length=150, null=True, blank=True)
+    pub_date = models.CharField(max_length=100, null=True, blank=True)     
+    explicit = models.CharField(max_length=50, null=True, blank=True)    
+    image = models.CharField(max_length=300, null=True, blank=True)
+    duration = models.CharField(max_length=100, null=True, blank=True)     
+    enclosure = models.CharField(max_length=400, null=True, blank=True)  
 
-    comment = GenericRelation(Comment)
-    like = GenericRelation(Like)
-    book_mark = GenericRelation(BookMark)
+    # comment = GenericRelation(Comment)
+    # like = GenericRelation(Like)
+    # book_mark = GenericRelation(BookMark)
+
+    
+    @classmethod
+    def fields(cls):
+        return [ f.name for f in cls._meta.fields + cls._meta.many_to_many ]
+
