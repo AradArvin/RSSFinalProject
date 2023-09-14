@@ -51,14 +51,13 @@ class PodcastEpisodeData(models.Model):
     episode_type = models.CharField(max_length=50, null=True, blank=True)
     episode_number = models.CharField(max_length=25, null=True, blank=True)
 
+    link = models.CharField(max_length=300, null=True, blank=True)
     guid = models.CharField(max_length=150, null=True, blank=True)
-    pub_date = models.CharField(max_length=100, null=True, blank=True)        # BooleanField
-    explicit = models.CharField(max_length=50, null=True, blank=True)         # BooleanField
+    pub_date = models.CharField(max_length=100, null=True, blank=True)     
+    explicit = models.CharField(max_length=50, null=True, blank=True)    
     image = models.CharField(max_length=300, null=True, blank=True)
-    duration = models.CharField(max_length=100, null=True, blank=True)        # Time
-    enclosure_url = models.CharField(max_length=200, null=True, blank=True)   # UrlField
-    enclosure_type = models.CharField(max_length=100, null=True, blank=True)
-    enclosure_length = models.CharField(max_length=25, null=True, blank=True)
+    duration = models.CharField(max_length=100, null=True, blank=True)     
+    enclosure = models.CharField(max_length=400, null=True, blank=True)  
 
     # comment = GenericRelation(Comment)
     # like = GenericRelation(Like)
