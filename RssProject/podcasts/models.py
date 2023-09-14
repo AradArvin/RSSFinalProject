@@ -50,24 +50,24 @@ class RssPodcastChannelMetaData(models.Model):
 class PodcastEpisodeData(models.Model):
     channel = models.ForeignKey(RssPodcastChannelMetaData, on_delete=models.CASCADE)
 
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=512, null=True, blank=True)
 
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     summary = models.TextField(null=True, blank=True)
     encoded_content = models.TextField(null=True, blank=True)
     subtitle = models.TextField(null=True, blank=True)
     keywords = models.TextField(null=True, blank=True)
 
-    episode_type = models.CharField(max_length=50, null=True, blank=True)
-    episode_number = models.CharField(max_length=25, null=True, blank=True)
+    episode_type = models.CharField(max_length=512, null=True, blank=True)
+    episode_number = models.CharField(max_length=512, null=True, blank=True)
 
-    link = models.CharField(max_length=300, null=True, blank=True)
-    guid = models.CharField(max_length=150, null=True, blank=True)
-    pub_date = models.CharField(max_length=100, null=True, blank=True)     
-    explicit = models.CharField(max_length=50, null=True, blank=True)    
-    image = models.CharField(max_length=300, null=True, blank=True)
-    duration = models.CharField(max_length=100, null=True, blank=True)     
-    enclosure = models.CharField(max_length=400, null=True, blank=True)  
+    link = models.TextField(null=True, blank=True)
+    guid = models.CharField(max_length=512, null=True, blank=True)
+    pub_date = models.CharField(max_length=512, null=True, blank=True)     
+    explicit = models.CharField(max_length=512, null=True, blank=True)    
+    image = models.TextField(null=True, blank=True)
+    duration = models.CharField(max_length=512, null=True, blank=True)     
+    enclosure = models.CharField(max_length=512, null=True, blank=True)  
 
     # comment = GenericRelation(Comment)
     # like = GenericRelation(Like)
