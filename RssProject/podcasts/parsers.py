@@ -72,3 +72,22 @@ def podcastEpisodeData_object_field_setter(item_tags: json, channel_obj: RssFeed
             )
 
 
+
+
+def save_data_to_db(file_name: str, url_name: str):
+    url_file, json_file = file_opener(file_name)
+
+    feed = RssFeedSource.objects.create(
+        rss_link=url_file["urls"][url_name],
+        parser_name="universal_rss_parser, save_data_to_db"
+        )
+
+    in_tag = json_file["rss"]["channel"]
+
+    
+    channel = rssPodcastChannelMetaData_object_field_setter(in_tag, feed)
+
+    
+    items_in_tag = in_tag["item"]
+
+    podcastEpisodeData_object_field_setter(items_in_tag, channel)
