@@ -36,6 +36,10 @@ class RssPodcastChannelMetaData(models.Model):
 
     # subscribe = GenericRelation(SubScribe)
 
+    @classmethod
+    def fields(cls):
+        return [ f.name for f in cls._meta.fields + cls._meta.many_to_many ]
+
 
 class PodcastEpisodeData(models.Model):
     channel = models.ForeignKey(RssPodcastChannelMetaData, on_delete=models.CASCADE)
@@ -62,4 +66,9 @@ class PodcastEpisodeData(models.Model):
     # comment = GenericRelation(Comment)
     # like = GenericRelation(Like)
     # book_mark = GenericRelation(BookMark)
+
+    
+    @classmethod
+    def fields(cls):
+        return [ f.name for f in cls._meta.fields + cls._meta.many_to_many ]
 
