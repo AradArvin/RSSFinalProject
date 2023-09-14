@@ -1,6 +1,12 @@
 from django.shortcuts import render
 from .parsers import save_data_to_db
 from django.http import HttpResponse
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
+from .models import RssFeedSource, RssPodcastChannelMetaData, PodcastEpisodeData
+from .serializers import RssFeedSourceSerializer, RssPodcastChannelMetaDataSerializer, PodcastEpisodeDataSerializer
+
 # Create your views here.
 
 def save_to_db(request):
@@ -34,3 +40,11 @@ class ListRssChannels(APIView):
     
 
 
+class ListRssEpisodes(APIView, PageNumberPagination):
+
+    page_size = 10
+    def get(self, request):
+        episodes = PodcastEpisodeData.objects.all()
+        result = self.paginate_queryset(episodes, request, view=self)
+        serializer = PodcastEpisodeDataSerializer(result, many=True)
+        return self.get_paginated_response(serializer.data)
