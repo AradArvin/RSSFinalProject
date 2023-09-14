@@ -13,3 +13,14 @@ def save_to_db(request):
     save_data_to_db("fm_EMPBC2962078635","TheLincolnProject")
     
     return HttpResponse('OK')
+
+
+
+class ListRssSources(APIView):
+
+    def get(self, request):
+        sources = RssFeedSource.objects.all()
+        serializer = RssFeedSourceSerializer(sources, many=True)
+        return Response(serializer.data)
+    
+
