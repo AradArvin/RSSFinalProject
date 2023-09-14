@@ -7,6 +7,9 @@ from django.db import models
 
 
 class RssFeedSource(models.Model):
+    rss_link = models.CharField(max_length=512)
+    parser_name = models.CharField(max_length=512)
+
     def __str__(self) -> str:
         return self.rss_link
 
