@@ -11,6 +11,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
             'email',
             'first_name',
             'last_name',
+            'password',
             ]
 
 
