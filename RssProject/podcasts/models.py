@@ -27,15 +27,12 @@ class RssPodcastChannelMetaData(models.Model):
     language = models.CharField(max_length=50, null=True, blank=True)
     category = models.CharField(max_length=50, null=True, blank=True)
     link = models.CharField(max_length=300, null=True, blank=True)
-    author_name = models.CharField(max_length=100, null=True, blank=True)
-    author_email = models.CharField(max_length=100, null=True, blank=True)    # EmailField
-    explicit = models.CharField(max_length=50, null=True, blank=True)         # BooleanField
-    image_url = models.CharField(max_length=300, null=True, blank=True)       # UrlField
-    image_link = models.CharField(max_length=200, null=True, blank=True)      
-    image_title = models.CharField(max_length=150, null=True, blank=True)      
+    owner = models.CharField(max_length=200, null=True, blank=True)
+    explicit = models.CharField(max_length=50, null=True, blank=True)       
+    image_url = models.CharField(max_length=400, null=True, blank=True)      
     podcast_type = models.CharField(max_length=100, null=True, blank=True)
     copy_right = models.CharField(max_length=100, null=True, blank=True)
-    pub_date = models.CharField(max_length=100, null=True, blank=True)        # BooleanField
+    pub_date = models.CharField(max_length=100, null=True, blank=True)      
 
     # subscribe = GenericRelation(SubScribe)
 
