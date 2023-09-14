@@ -48,3 +48,27 @@ def rssPodcastChannelMetaData_object_field_setter(meta_tags: json, feed_obj: Rss
     return channel
 
 
+
+
+def podcastEpisodeData_object_field_setter(item_tags: json, channel_obj: RssFeedSource):
+        for item in item_tags:
+            PodcastEpisodeData.objects.create(
+            channel = channel_obj,
+            title = item.get("title", None),
+            description = item.get("description", None),
+            summary = item.get("itunes:summary", None),
+            encoded_content = item.get("content:encoded", None),
+            subtitle = item.get("itunes:subtitle", None),
+            keywords = item.get("itunes:keywords", None),
+            episode_type = item.get("itunes:episodeType", None),
+            episode_number = item.get("itunes:episode", None),
+            link = item.get("link", None),
+            guid = item.get("guid", None),
+            pub_date = item.get("pubDate", None),
+            explicit = item.get("itunes:explicit", None),
+            image = item.get("itunes:image", None),
+            duration = item.get("itunes:duration", None),
+            enclosure = item.get("enclosure", None),
+            )
+
+
