@@ -18,24 +18,24 @@ class RssFeedSource(models.Model):
 class RssPodcastChannelMetaData(models.Model):
     rss_feed = models.ForeignKey(RssFeedSource, on_delete=models.CASCADE)
 
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=512, null=True, blank=True)
     
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     summary = models.TextField(null=True, blank=True)
     encoded_content = models.TextField(null=True, blank=True)
     subtitle = models.TextField(null=True, blank=True)
     keywords = models.TextField(null=True, blank=True)
     
-    generator = models.CharField(max_length=50, null=True, blank=True)
-    language = models.CharField(max_length=50, null=True, blank=True)
-    category = models.CharField(max_length=50, null=True, blank=True)
-    link = models.CharField(max_length=300, null=True, blank=True)
-    owner = models.CharField(max_length=200, null=True, blank=True)
-    explicit = models.CharField(max_length=50, null=True, blank=True)       
-    image_url = models.CharField(max_length=400, null=True, blank=True)      
-    podcast_type = models.CharField(max_length=100, null=True, blank=True)
-    copy_right = models.CharField(max_length=100, null=True, blank=True)
-    pub_date = models.CharField(max_length=100, null=True, blank=True)      
+    generator = models.CharField(max_length=512, null=True, blank=True)
+    language = models.CharField(max_length=512, null=True, blank=True)
+    category = models.CharField(max_length=512, null=True, blank=True)
+    link = models.TextField(null=True, blank=True)
+    owner = models.CharField(max_length=512, null=True, blank=True)
+    explicit = models.CharField(max_length=512, null=True, blank=True)       
+    image_url = models.CharField(max_length=512, null=True, blank=True)      
+    podcast_type = models.CharField(max_length=512, null=True, blank=True)
+    copy_right = models.CharField(max_length=512, null=True, blank=True)
+    pub_date = models.CharField(max_length=512, null=True, blank=True)      
 
     # subscribe = GenericRelation(SubScribe)
 
