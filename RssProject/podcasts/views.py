@@ -1,9 +1,11 @@
 from django.shortcuts import render
+from django.http import Http404
 from .parsers import save_data_to_db
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.generics import GenericAPIView
 from .models import RssFeedSource, RssPodcastChannelMetaData, PodcastEpisodeData
 from .serializers import RssFeedSourceSerializer, RssPodcastChannelMetaDataSerializer, PodcastEpisodeDataSerializer
 
@@ -64,3 +66,18 @@ class ListRssEpisodes(APIView, PageNumberPagination):
         result = self.paginate_queryset(episodes, request, view=self)
         serializer = PodcastEpisodeDataSerializer(result, many=True)
         return self.get_paginated_response(serializer.data)
+    
+
+
+class RssEpisodesDetail(GenericAPIView):
+    serializer_class = PodcastEpisodeDataSerializer
+
+    def get_object(self):
+        pk = self.kwargs["pk"]
+
+        queryset = PodcastEpisodeData.objects.filter(pk=pk)
+
+        if not queryset.exists():
+            raise Http404("Podcast episode not found")
+
+        return queryset.first()
