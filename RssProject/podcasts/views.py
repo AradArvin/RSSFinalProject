@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.generics import GenericAPIView
+from rest_framework.viewsets import ViewSet
 from .models import RssFeedSource, RssPodcastChannelMetaData, PodcastEpisodeData
 from .serializers import RssFeedSourceSerializer, RssPodcastChannelMetaDataSerializer, PodcastEpisodeDataSerializer
 
@@ -44,16 +45,13 @@ class ListRssChannels(APIView):
 
 class RssChannelDetail(GenericAPIView):
     serializer_class = RssPodcastChannelMetaDataSerializer
+    queryset = RssPodcastChannelMetaData.objects.all()
 
-    def get_object(self):
-        pk = self.kwargs["pk"]
+    def get(self, request, *args, **kwargs):
+        channel = self.get_object()
+        serializer = self.get_serializer(channel)
 
-        queryset = RssPodcastChannelMetaData.objects.filter(pk=pk)
-
-        if not queryset.exists():
-            raise Http404("Podcast not found")
-
-        return queryset.first()
+        return Response(serializer.data)
 
     
 
@@ -76,14 +74,12 @@ class CustomPagination(PageNumberPagination):
 
 class RssEpisodesDetail(GenericAPIView):
     serializer_class = PodcastEpisodeDataSerializer
+    queryset = PodcastEpisodeData.objects.all()
     pagination_class = CustomPagination
+
     
-    def get_object(self):
-        pk = self.kwargs["pk"]
+    def get(self, request, *args, **kwargs):
+        episode = self.get_object()
+        serializer = self.get_serializer(episode)
 
-        queryset = PodcastEpisodeData.objects.filter(pk=pk)
-
-        if not queryset.exists():
-            raise Http404("Podcast episode not found")
-
-        return queryset.first()
+        return Response(serializer.data)
