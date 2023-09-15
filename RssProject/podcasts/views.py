@@ -40,6 +40,22 @@ class ListRssChannels(APIView):
     
 
 
+class RssChannelDetail(GenericAPIView):
+    serializer_class = RssPodcastChannelMetaDataSerializer
+
+    def get_object(self):
+        pk = self.kwargs["pk"]
+
+        queryset = RssPodcastChannelMetaData.objects.filter(pk=pk)
+
+        if not queryset.exists():
+            raise Http404("Podcast not found")
+
+        return queryset.first()
+
+    
+
+
 class ListRssEpisodes(APIView, PageNumberPagination):
 
     page_size = 10
