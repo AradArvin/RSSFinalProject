@@ -15,7 +15,7 @@ Since this project uses the django project technology I recommend you to read th
 
 - clone the forked repo to you'r local storage >>>
     
-    `git clone https://github.com/m-kafaiekhou/Group2Project.git`
+    `git clone https://github.com/AradArvin/RSSFinalProject.git`
 
 
 - make a virtual environment for the django project >>>
