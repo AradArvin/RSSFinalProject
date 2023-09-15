@@ -89,12 +89,20 @@ AUTHENTICATION:
     ]
 
 
-Login & Logout:
+DEBUG_TOOLBAR:
 
 ..  code-block:: python
 
-    LOGIN_REDIRECT_URL = "/dashboard/"
-    LOGOUT_REDIRECT_URL = '/accounts/login/'
+    THIRDPARTY_APPS = [
+        'debug_toolbar',
+    ]
+    MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware']
+    INTERNAL_IPS = [
+        "127.0.0.1",
+    ]
+
+
+
 
 
 **These settings are needed to run the project without errors**
