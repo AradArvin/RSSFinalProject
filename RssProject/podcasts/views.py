@@ -68,10 +68,16 @@ class ListRssEpisodes(APIView, PageNumberPagination):
         return self.get_paginated_response(serializer.data)
     
 
+class CustomPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = "page_size"
+    max_page_size = 1000
+
 
 class RssEpisodesDetail(GenericAPIView):
     serializer_class = PodcastEpisodeDataSerializer
-
+    pagination_class = CustomPagination
+    
     def get_object(self):
         pk = self.kwargs["pk"]
 
