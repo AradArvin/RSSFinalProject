@@ -139,3 +139,33 @@ class RefreshTokenSerializer(serializers.Serializer):
     
 
 
+
+class AccessTokenSerializer(serializers.Serializer):
+    refresh_token = serializers.CharField(max_length=512, write_only=True)
+    access_token = serializers.CharField(max_length=512, read_only=True)
+
+    def validate(self, attrs):
+        """Provide the refresh token  in order to get the access token"""
+        refresh_token = attrs.get('refresh_token', None)
+
+        if refresh_token is None:
+            raise serializers.ValidationError("You must enter the refresh token in order to get access token")
+       
+        
+        payload = token_decode(refresh_token)
+        
+        
+        user = CustomUser.objects.get(id=payload["user_id"])
+        
+        if cache_getter(user.id):
+        
+            access_token = access_token_gen(user_id=user.id)
+
+            validated_data = {
+                'email':user.email,
+                'access_token': access_token,
+            }
+        
+            return validated_data
+
+
