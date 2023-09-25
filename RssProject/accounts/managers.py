@@ -1,5 +1,13 @@
+from typing import Any
 from django.contrib.auth.models import BaseUserManager
+from rest_framework.exceptions import APIException
 
+
+
+class UnmatchedException(APIException):
+    status_code = 401
+    default_detail = 'Not Acceptable'
+    default_code = '403'
 
 
 class CustomUserManager(BaseUserManager):
