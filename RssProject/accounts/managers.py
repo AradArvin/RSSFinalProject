@@ -14,8 +14,14 @@ class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password, **other_fields):
         other_fields.setdefault('is_active', True)
 
+        if username is None:
+            raise TypeError("Please provide a Username!")
+
         if not email:
-            raise ValueError('Please provide an Email adress')
+            raise ValueError('Please provide an Email adress!')
+        
+        if password != other_fields["confirm_password"]:
+            raise UnmatchedException("Password doesn't match")
 
         user = self.model(email=email, username=username, **other_fields)
         user.set_password(password)
