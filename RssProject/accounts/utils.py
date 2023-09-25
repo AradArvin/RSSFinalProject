@@ -55,3 +55,18 @@ def gen_jti():
     return str(uuid4().hex)
 
 
+
+def token_encode(payload):
+    """Encode tokens based on HS256 algorithm"""
+
+    token = jwt.encode(payload=payload, key=settings.SECRET_KEY, algorithm='HS256').decode('utf-8')
+    return token
+
+
+
+def token_decode(token):
+    """Dencode tokens based on HS256 algorithm"""
+
+    payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=['HS256'])
+    return payload
+
