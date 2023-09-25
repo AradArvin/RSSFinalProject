@@ -30,11 +30,17 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, username, email, password, **other_fields):
+
+        if password is None:
+            raise TypeError("Please enter your password!")
         
+        other_fields.setdefault('is_active', True)
         other_fields.setdefault('is_staff', True)
         other_fields.setdefault('is_superuser', True)
-        other_fields.setdefault('is_active', True)
 
         user = self.create_user(self, username, email, password, **other_fields)
         
         return user
+    
+
+
