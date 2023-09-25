@@ -105,3 +105,18 @@ class AccessTokenAPIView(APIView):
 
 
 
+
+class LogOutAPIView(APIView):
+    # only if refresh token exists the user will be kept logged in
+    permission_classes = (AllowAny,)
+    renderer_classes = (UserJSONRenderer,)
+    serializer_class = LogoutSerializer
+
+    def post(self, request):
+
+        user = request.data.get('user', {})
+        
+        serializer = self.serializer_class(data=user)
+        serializer.is_valid(raise_exception=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
