@@ -19,9 +19,18 @@ class CustomUser(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
     
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'email']
+    REQUIRED_FIELDS = ['username',]
 
     objects = CustomUserManager()
 
+
     def __str__(self) -> str:
         return f"{self.username}"
+    
+
+    def get_full_name(self):
+        return self.username
+    
+
+    def get_short_name(self):
+        return self.username
