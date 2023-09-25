@@ -139,3 +139,36 @@ def check_cache(user_id: int):
             return False
 
 
+
+def cache_getter(user_id: int):
+    """
+    Takes in the user_id and returns the refresh_token if the cached key is not timed out.
+    If it's timedout then the user needs to login again
+    """
+    try:
+        uid = f"user_{user_id}"
+        all_keys = cache.keys("*")
+        for i in all_keys:
+            x = i.split(" ")
+            if uid == x[0]:
+                exp = cache.get(i)
+                u_uid = x[1]
+
+        return recreate_refresh_token(user_id, exp, u_uid)
+    except:
+        raise TokenNotFound("User is not logged in.")
+
+
+
+def recreate_refresh_token(user_id, exp, u_uid):
+    """Recreate the cached refresh token."""
+
+    refresh_token = token_encode({
+        'token_type':'refresh',
+        'user_id':user_id,
+        'exp': exp,
+        'iat': datetime.utcnow(),
+        'jti':u_uid
+    })
+    
+    return refresh_token
