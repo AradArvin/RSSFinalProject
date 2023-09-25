@@ -29,3 +29,19 @@ class RegistrationAPIView(APIView):
     
 
 
+class LoginAPIView(APIView):
+    permission_classes = (AllowAny,)
+    renderer_classes = (UserJSONRenderer,)
+    serializer_class = LoginSerializer
+
+    def post(self, request):
+        
+        user = request.data.get('user', {})
+        
+        serializer = self.serializer_class(data=user)
+        serializer.is_valid(raise_exception=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+
