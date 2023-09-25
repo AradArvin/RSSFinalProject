@@ -88,3 +88,20 @@ class RefreshTokenAPIView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 
+
+class AccessTokenAPIView(APIView):
+    permission_classes = (AllowAny,)
+    renderer_classes = (UserJSONRenderer,)
+    serializer_class = AccessTokenSerializer
+
+    def post(self, request):
+
+        token = request.data.get('user', {})
+
+        serializer = self.serializer_class(data=token)
+        serializer.is_valid(raise_exception=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
