@@ -178,3 +178,16 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 
 # CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 # CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+
+# Rest Framework
+
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'accounts.exceptions.custom_exception_handler',
+    'NON_FIELD_ERRORS_KEY': 'error',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'accounts.authentication.JWTAuthentication',
+    ),
+}
+
+
