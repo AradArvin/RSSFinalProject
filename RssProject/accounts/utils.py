@@ -82,3 +82,13 @@ def check_token_type(token):
     return token_type
 
 
+def token_deleter(user_id: int):
+    """Checkes if a user has refresh token and then deletes it."""
+    uid = f"user_{user_id}"
+    all_keys = cache.keys("*")
+    for i in all_keys:
+        x = i.split(" ")
+        if uid == x[0]:
+            cache.delete(i)
+
+
