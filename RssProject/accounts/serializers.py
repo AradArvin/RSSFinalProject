@@ -169,3 +169,30 @@ class AccessTokenSerializer(serializers.Serializer):
             return validated_data
 
 
+
+class LogoutSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField(write_only=True)
+    status = serializers.CharField(max_length=25, read_only=True)
+
+    def validate(self, attrs):
+        """If the user has Refresh token(is logged in) then delete the refresh token to log out."""
+        user_id = attrs.get('user_id', None)
+
+        if user_id is None:
+            raise serializers.ValidationError("Provide user id")
+       
+        user = CustomUser.objects.get(id=user_id)
+        
+        
+        if cache_getter(user.id):
+        
+            token_deleter(user_id)
+
+            validated_data = {
+                'id':user_id,
+                'status':"User logged out"
+            }
+        
+            return validated_data
+        else:
+            raise serializers.ValidationError("User is already logged out")
