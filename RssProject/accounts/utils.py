@@ -92,3 +92,37 @@ def token_deleter(user_id: int):
             cache.delete(i)
 
 
+def cache_setter(refresh_token: str) -> None:
+    """Set a value in the cache with an optional expiration time."""
+
+    token = token_decode(refresh_token)
+    if token["token_type"] == "refresh":
+
+        jti = token["jti"]
+        id = token["user_id"]
+        key = f"user_{id} {jti}"
+
+        key_deleter(key=key)
+
+        exp = token["exp"]
+        iat = token["iat"]
+        timeout = exp - iat
+
+        cache.set(key=key, value=exp, timeout=timeout)
+    else:
+        raise WrongToken("Wrong token type")
+
+
+
+def key_deleter(key: str):
+    """Check for duplicate keys and delete them from redis when found."""
+
+    uid = key.split(" ")
+    all_keys = cache.keys("*")
+ 
+    for i in all_keys:
+        x = i.split(" ")
+        if uid[0] == x[0]:
+            cache.delete(i)
+
+
