@@ -73,3 +73,18 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
     
 
 
+class RefreshTokenAPIView(APIView):
+    permission_classes = (AllowAny,)
+    renderer_classes = (UserJSONRenderer,)
+    serializer_class = RefreshTokenSerializer
+
+    def post(self, request):
+
+        user_data = request.data.get('user', {})
+        
+        serializer = self.serializer_class(data=user_data)
+        serializer.is_valid(raise_exception=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
