@@ -17,3 +17,11 @@ def custom_exception_handler(exc, context):
 
     return response
 
+
+def _handle_generic_error(exc, context, response):
+
+    response.data = {
+        'errors': response.data
+    }
+
+    return response
