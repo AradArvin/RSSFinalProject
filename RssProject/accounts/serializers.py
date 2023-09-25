@@ -101,3 +101,41 @@ class UserRUSerializer(serializers.ModelSerializer):
     
 
 
+
+class RefreshTokenSerializer(serializers.Serializer):
+    email = serializers.EmailField(write_only=True)
+    password = serializers.CharField(max_length=128, write_only=True)
+    refresh_token = serializers.CharField(max_length=512, read_only=True)
+
+    def validate(self, attrs):
+        """Provide user data to get refresh token."""
+
+        email = attrs.get('email', None)
+        password = attrs.get('password', None)
+
+        if email is None:
+            raise serializers.ValidationError("An email adress is required to login")
+       
+        if password is None:
+            raise serializers.ValidationError("A password is required to login")
+        
+        user = authenticate(username=email, password=password)
+
+        if user is None:
+            raise serializers.ValidationError("Refresh Token not found! Check if you are logged in.")
+        
+
+        if not user.is_active:
+            raise serializers.ValidationError("This user has been deavtivated")
+        
+        refresh_token = cache_getter(user_id=user.id)
+
+        validated_data = {
+            'email':user.email,
+            'refresh_token': refresh_token,
+        }
+    
+        return validated_data
+    
+
+
