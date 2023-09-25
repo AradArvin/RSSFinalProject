@@ -70,3 +70,15 @@ def token_decode(token):
     payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=['HS256'])
     return payload
 
+
+def check_token_type(token):
+    """Returns the type of the token(access/refresh)"""
+    try:
+        payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=['HS256'])
+        token_type = payload["token_type"]
+    except:
+        return None
+
+    return token_type
+
+
