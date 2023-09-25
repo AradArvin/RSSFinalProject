@@ -126,3 +126,16 @@ def key_deleter(key: str):
             cache.delete(i)
 
 
+
+def check_cache(user_id: int):
+    """Checks to see whether or not there is any cached data for this user ID."""
+    uid = f"user_{user_id}"
+    all_keys = cache.keys("*")
+    for i in all_keys:
+        x = i.split(" ")
+        if uid == x[0]:
+            return True
+        else:
+            return False
+
+
