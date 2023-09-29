@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.generics import RetrieveUpdateAPIView
+from rest_framework.generics import RetrieveUpdateAPIView, UpdateAPIView
 from rest_framework import status
 
 
@@ -108,15 +108,34 @@ class AccessTokenAPIView(APIView):
 
 class LogOutAPIView(APIView):
     # only if refresh token exists the user will be kept logged in
-    permission_classes = (AllowAny,)
-    renderer_classes = (UserJSONRenderer,)
-    serializer_class = LogoutSerializer
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request):
 
-        user = request.data.get('user', {})
-        
-        serializer = self.serializer_class(data=user)
-        serializer.is_valid(raise_exception=True)
+        user = request.user
+        token_deleter(user.id)
+        msg = {'status':'logged out!'}
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(msg, status=status.HTTP_200_OK)
+    
+
+
+
+class ChangePasswordView(UpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    renderer_classes = (UserJSONRenderer,)
+    serializer_class = ChangePasswordSerializer
+
+    def update(self, request, *args, **kwargs):
+        
+        serializer_data = request.data.get('user', {})
+
+        serializer = self.serializer_class(
+            request.user, data=serializer_data, partial=True
+        )
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        msg = {'status': 'Password changed succesfully.'}
+        return Response(msg, status=status.HTTP_200_OK)

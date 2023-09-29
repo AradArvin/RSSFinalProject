@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    command: sh -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    networks:
+      - main
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+
+  postgres:
+    image: postgres:14-alpine
+    volumes:
+      - .:/postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=libreadmin
+      - POSTGRES_DB=rss_data
+    networks:
+      - main
+    restart: always
+
+  redis:
+    image: redis:7
+    networks:
+      - main
+    volumes:
+      - .:/redis
+    
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    networks:
+      - main
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - .:/rabbitmq
+
+  celery:
+    restart: always
+    build: .
+    command: celery -A config worker -l INFO
+    networks:
+      - main
+    volumes:
+      - .:/celery
+    depends_on:
+      - postgres
+      - rabbitmq
+      - redis
+      - app
+
+
+    
+
+networks:
+  main:
+
+volumes:
+  app:
+  postgres:
+  rabbitmq:
+  celery:

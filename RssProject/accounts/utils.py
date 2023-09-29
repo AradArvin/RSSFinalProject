@@ -7,10 +7,13 @@ from typing import Any
 from rest_framework.exceptions import APIException
 
 
+
 class WrongToken(APIException):
     status_code = 401
     default_detail = 'Not Acceptable'
     default_code = '403'
+
+
 
 
 class TokenNotFound(APIException):
@@ -26,12 +29,13 @@ def access_token_gen(user_id: int):
     access_token = token_encode({
         'token_type':'access',
         'user_id':user_id,
-        'exp': datetime.utcnow() + timedelta(minutes=1),
+        'exp': datetime.utcnow() + timedelta(minutes=10),
         'iat': datetime.utcnow(),
         'jti':gen_jti()
     })
 
     return access_token
+
 
 
 
@@ -50,9 +54,11 @@ def refresh_token_gen(user_id: int):
 
 
 
+
 def gen_jti():
     """Generate hexed unique id for user"""
     return str(uuid4().hex)
+
 
 
 
@@ -64,11 +70,14 @@ def token_encode(payload):
 
 
 
+
 def token_decode(token):
     """Dencode tokens based on HS256 algorithm"""
 
     payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=['HS256'])
     return payload
+
+
 
 
 def check_token_type(token):
@@ -82,6 +91,8 @@ def check_token_type(token):
     return token_type
 
 
+
+
 def token_deleter(user_id: int):
     """Checkes if a user has refresh token and then deletes it."""
     uid = f"user_{user_id}"
@@ -90,6 +101,8 @@ def token_deleter(user_id: int):
         x = i.split(" ")
         if uid == x[0]:
             cache.delete(i)
+
+
 
 
 def cache_setter(refresh_token: str) -> None:
@@ -114,6 +127,7 @@ def cache_setter(refresh_token: str) -> None:
 
 
 
+
 def key_deleter(key: str):
     """Check for duplicate keys and delete them from redis when found."""
 
@@ -124,6 +138,7 @@ def key_deleter(key: str):
         x = i.split(" ")
         if uid[0] == x[0]:
             cache.delete(i)
+
 
 
 

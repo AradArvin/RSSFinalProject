@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import check_password
 from rest_framework import status
 from .models import CustomUser
 from .utils import *
@@ -27,7 +28,8 @@ class RegisterationSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(max_length=128, write_only=True)
-    token = serializers.CharField(max_length=512, read_only=True)
+    access = serializers.CharField(max_length=512, read_only=True)
+    refresh = serializers.CharField(max_length=512, read_only=True)
 
 
     def validate(self, attrs):
@@ -65,7 +67,8 @@ class LoginSerializer(serializers.Serializer):
         validated_data = {
             'email': user.email,
             'username': user.username,
-            'token': access_token
+            'access': access_token,
+            'refresh': refresh_token,
         }
     
         return validated_data
@@ -170,29 +173,37 @@ class AccessTokenSerializer(serializers.Serializer):
 
 
 
-class LogoutSerializer(serializers.Serializer):
-    user_id = serializers.IntegerField(write_only=True)
-    status = serializers.CharField(max_length=25, read_only=True)
+class ChangePasswordSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(max_length=128, min_length=8, write_only=True)
+    new_password = serializers.CharField(max_length=128, min_length=8, write_only=True)
+    confirm_new_password = serializers.CharField(max_length=128, min_length=8, write_only=True)
 
-    def validate(self, attrs):
-        """If the user has Refresh token(is logged in) then delete the refresh token to log out."""
-        user_id = attrs.get('user_id', None)
+    class Meta:
+        model = CustomUser
+        fields = ['password', 'new_password','confirm_new_password']
 
-        if user_id is None:
-            raise serializers.ValidationError("Provide user id")
-       
-        user = CustomUser.objects.get(id=user_id)
-        
-        
-        if cache_getter(user.id):
-        
-            token_deleter(user_id)
 
-            validated_data = {
-                'id':user_id,
-                'status':"User logged out"
-            }
-        
-            return validated_data
+
+    def update(self, instance, validated_data):
+        """Update a user with new data."""
+
+        password = validated_data.pop('password', None)
+
+        if check_password(password, instance.password):
+            
+            new_password = validated_data.get("new_password", None)
+            confirm_new_password = validated_data.get("confirm_new_password", None)
+
+            if new_password and confirm_new_password:
+                if new_password == confirm_new_password:
+                    instance.set_password(confirm_new_password)
+                else:
+                    raise serializers.ValidationError("New Passwords don't match!")
+            else:
+                raise serializers.ValidationError("New password or confirm password missing!")
+
+            instance.save()
+
+            return instance
         else:
-            raise serializers.ValidationError("User is already logged out")
+            raise serializers.ValidationError("Old password is wrong!")

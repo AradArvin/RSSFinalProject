@@ -1,14 +1,14 @@
 from django.db import models
-# from interactions.models import Comment, Like, BookMark, SubScribe
-# from django.contrib.contenttypes.fields import GenericRelation
+from interactions.models import Comment, Like, BookMark
+
 
 # Create your models here.
 
 
 
 class RssFeedSource(models.Model):
+    rss_name = models.CharField(max_length=512)
     rss_link = models.CharField(max_length=512)
-    parser_name = models.CharField(max_length=512)
 
     def __str__(self) -> str:
         return self.rss_link
@@ -37,7 +37,7 @@ class RssPodcastChannelMetaData(models.Model):
     copy_right = models.CharField(max_length=512, null=True, blank=True)
     pub_date = models.CharField(max_length=512, null=True, blank=True)      
 
-    # subscribe = GenericRelation(SubScribe)
+
 
     @classmethod
     def fields(cls):
@@ -45,6 +45,7 @@ class RssPodcastChannelMetaData(models.Model):
     
     def __str__(self) -> str:
         return self.title
+
 
 
 class PodcastEpisodeData(models.Model):
@@ -69,9 +70,9 @@ class PodcastEpisodeData(models.Model):
     duration = models.CharField(max_length=512, null=True, blank=True)     
     enclosure = models.CharField(max_length=512, null=True, blank=True)  
 
-    # comment = GenericRelation(Comment)
-    # like = GenericRelation(Like)
-    # book_mark = GenericRelation(BookMark)
+    comment = models.ForeignKey(Comment, on_delete=models.SET_NULL, null=True, blank=True)
+    like = models.ForeignKey(Like, on_delete=models.SET_NULL, null=True, blank=True)
+    book_mark = models.ForeignKey(BookMark, on_delete=models.SET_NULL, null=True, blank=True)
 
     
     @classmethod

@@ -1,11 +1,14 @@
-from django.urls import path
+from django.urls import path, include
 from .views import *
 
+
+
 urlpatterns = [
-    path("save/", save_to_db, name="save"),
-    path("api/feed/", ListRssSources.as_view(), name="rss_source_api"),
-    path("api/channel/", ListRssChannels.as_view(), name="rss_channel_api"),
-    path("api/channel/<int:pk>/", RssChannelDetail.as_view(), name="rss_channel_detail_api"),
-    path("api/episodes/", ListRssEpisodes.as_view(), name="rss_episodes_api"),
-    path("api/episodes/<int:pk>/", RssEpisodesDetail.as_view(), name="rss_episodes_detail_api"),
+    path("api/parse/", RssParserAPIView.as_view(), name="parse"),
+    path("api/rss/", ListRssSources.as_view(), name="rss_source_api"),
+    path("api/channel/<int:pk>/", ChannelsMetaDataList.as_view(), name="rss_channel_api"),
+    path("api/channel/<int:pk>/detail", ChannelsMetaDataDetail.as_view(), name="rss_channel_detail_api"),
+    path("api/episode/<int:pk>/", ListRssEpisodes.as_view(), name="rss_episodes_api"),
+    path("api/episode/<int:pk>/detail/", RssEpisodesDetail.as_view(), name="rss_episodes_detail_api"),
+    path("api/rec", Top10ByAllUsersView.as_view(), name="rec"),
 ]

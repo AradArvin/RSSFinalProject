@@ -10,37 +10,36 @@ class UnmatchedException(APIException):
     default_code = '403'
 
 
+
 class CustomUserManager(BaseUserManager):
-    def create_user(self, username, email, password, **other_fields):
-        other_fields.setdefault('is_active', True)
 
-        if username is None:
-            raise TypeError("Please provide a Username!")
-
-        if not email:
-            raise ValueError('Please provide an Email adress!')
+    def create_user(self, username, email, password=None, **kwargs):
         
-        if password != other_fields["confirm_password"]:
-            raise UnmatchedException("Password doesn't match")
-
-        user = self.model(email=email, username=username, **other_fields)
+        if username is None:
+            raise TypeError("User must have a username!")
+        
+        if email is None:
+            raise TypeError("User must have an email!")
+        
+        if password != kwargs["confirm_password"]:
+            raise UnmatchedException("Passwords doesn't match")
+        
+       
+        user = self.model(username=username, email=email)
         user.set_password(password)
         user.save()
-
-        return user
-
-    def create_superuser(self, username, email, password, **other_fields):
-
-        if password is None:
-            raise TypeError("Please enter your password!")
-        
-        other_fields.setdefault('is_active', True)
-        other_fields.setdefault('is_staff', True)
-        other_fields.setdefault('is_superuser', True)
-
-        user = self.create_user(self, username, email, password, **other_fields)
         
         return user
     
 
+    def create_superuser(self, username, email, password, **kwargs):
 
+        if password is None:
+            raise TypeError("Please enter your password!")
+
+        user = self.create_user(username=username, email=email, password=password)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
+
+        return user

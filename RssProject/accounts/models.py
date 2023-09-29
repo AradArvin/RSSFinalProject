@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.models import PermissionsMixin
 from .managers import CustomUserManager
 # Create your models here.
 
 
-class CustomUser(AbstractBaseUser):
+class CustomUser(AbstractBaseUser, PermissionsMixin):
     
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(unique=True)

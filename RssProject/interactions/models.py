@@ -1,7 +1,6 @@
 from django.db import models
 from accounts.models import CustomUser
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
+from podcasts.models import *
 
 # Create your models here.
 
@@ -9,38 +8,33 @@ from django.contrib.contenttypes.models import ContentType
 
 class Comment(models.Model):
     opinion = models.TextField()
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    commenter = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
-    content_type =   models.ForeignKey(ContentType)
-    object_id = models.PositiveIntegerField()
-    content_object=GenericForeignKey('content_type', 'object_id')
+
+
+    def __str__(self) -> str:
+        return self.opinion[:15]
 
 
 
 
 class Like(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    
-    content_type =   models.ForeignKey(ContentType)
-    object_id = models.PositiveIntegerField()
-    content_object=GenericForeignKey('content_type', 'object_id')
+    users = models.ManyToManyField(CustomUser)
 
+
+
+    def __str__(self) -> str:
+        return self.likes.count()
 
 
 
 class SubScribe(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    subscribed = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
-    content_type =   models.ForeignKey(ContentType)
-    object_id = models.PositiveIntegerField()
-    content_object=GenericForeignKey('content_type', 'object_id')
 
 
 
 
 class BookMark(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    bookmarked = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
-    content_type =   models.ForeignKey(ContentType)
-    object_id = models.PositiveIntegerField()
-    content_object=GenericForeignKey('content_type', 'object_id')

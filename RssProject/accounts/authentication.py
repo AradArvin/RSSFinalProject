@@ -47,7 +47,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
      
         if token_type != "access":
-            raise TokenException('This Token is not an access Token')
+            raise TokenException('Invalid Token!')
         return self._authenticate_credentials(request, token)
 
     
