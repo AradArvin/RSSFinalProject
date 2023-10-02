@@ -1,38 +1,42 @@
-version: '3.8'
+
 
 services:
   app:
     build: .
-    command: sh -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+    command: sh -c "python3 manage.py makemigrations accounts interactions podcasts && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
     volumes:
-      - .:/app
+      - app:/app
     networks:
       - main
     ports:
-      - "8000:8000"
+      - 8000:8000
     depends_on:
-      - postgres
-      - redis
-      - rabbitmq
+      - db
+    
 
-  postgres:
-    image: postgres:14-alpine
+
+  db:
+    image: postgres:14
     volumes:
-      - .:/postgres_data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=libreadmin
-      - POSTGRES_DB=rss_data
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
     networks:
       - main
     restart: always
+    env_file:
+      - .env
+
+
 
   redis:
     image: redis:7
     networks:
       - main
     volumes:
-      - .:/redis
+      - redis:/redis
     
 
   rabbitmq:
@@ -40,10 +44,11 @@ services:
     networks:
       - main
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - 5672:5672
+      - 15672:15672
     volumes:
-      - .:/rabbitmq
+      - rabbit:/rabbitmq
+
 
   celery:
     restart: always
@@ -52,21 +57,20 @@ services:
     networks:
       - main
     volumes:
-      - .:/celery
+      - celery:/celery
     depends_on:
-      - postgres
       - rabbitmq
       - redis
       - app
 
 
-    
 
 networks:
   main:
 
 volumes:
   app:
-  postgres:
-  rabbitmq:
+  postgres-data:
+  redis:
+  rabbit:
   celery:
