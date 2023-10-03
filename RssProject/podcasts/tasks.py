@@ -17,7 +17,7 @@ class BaseTaskWithRetry(Task):
 
 
 @shared_task(bind=True, base=BaseTaskWithRetry)
-def rss_parsing(self, link):
+def task_rss_parsing(self, link):
     try:
         save_data_to_db(rss_link=link)
         logger.info('Parsing started...')

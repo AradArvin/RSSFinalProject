@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import RssFeedSource, RssPodcastChannelMetaData, PodcastEpisodeData
-from .tasks import rss_parsing
+from .tasks import task_rss_parsing
 from django.conf import settings
 
 
@@ -16,10 +16,10 @@ class RssParserSerializer(serializers.Serializer):
         
         if not link:
             for rss_obj in RssFeedSource.objects.all():
-                rss_parsing.delay(rss_obj.rss_link)
+                task_rss_parsing.delay(rss_obj.rss_link)
         
 
-        rss_parsing.delay(link)
+        task_rss_parsing.delay(link)
 
 
         validated_data = {
