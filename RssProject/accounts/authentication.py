@@ -45,9 +45,15 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
         token_type = check_token_type(token)
 
-     
+       
         if token_type != "access":
             raise TokenException('Invalid Token!')
+        
+        payload = token_decode(token)
+        user_id = payload["user_id"]
+        if not cache_getter(user_id):
+            raise TokenException('User is logged out!')
+        
         return self._authenticate_credentials(request, token)
 
     
