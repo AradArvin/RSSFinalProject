@@ -23,6 +23,15 @@ class TokenNotFound(APIException):
 
 
 
+
+def gen_jti():
+    """Generate hexed unique id for user"""
+    return str(uuid4().hex)
+
+jti = gen_jti()
+
+
+
 def access_token_gen(user_id: int):
     """Generate access token based on usser id."""
 
@@ -31,7 +40,7 @@ def access_token_gen(user_id: int):
         'user_id':user_id,
         'exp': datetime.utcnow() + timedelta(minutes=10),
         'iat': datetime.utcnow(),
-        'jti':gen_jti()
+        'jti':jti
     })
 
     return access_token
@@ -47,17 +56,11 @@ def refresh_token_gen(user_id: int):
         'user_id':user_id,
         'exp': datetime.utcnow() + timedelta(days=1),
         'iat': datetime.utcnow(),
-        'jti':gen_jti()
+        'jti':jti
     })
     
     return refresh_token
 
-
-
-
-def gen_jti():
-    """Generate hexed unique id for user"""
-    return str(uuid4().hex)
 
 
 
