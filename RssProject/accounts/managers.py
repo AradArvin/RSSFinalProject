@@ -37,7 +37,7 @@ class CustomUserManager(BaseUserManager):
         if password is None:
             raise TypeError("Please enter your password!")
 
-        user = self.create_user(username=username, email=email, password=password)
+        user = self.create_user(username=username, email=email, password=password, confirm_password=password)
         user.is_staff = True
         user.is_superuser = True
         user.save()
