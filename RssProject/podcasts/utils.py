@@ -12,13 +12,11 @@ class RequestConnectionError(APIException):
 
 
 def universal_rss_parser(url):
-    try:
-        response = requests.get(url)
-        t_data = response.text
 
-        xml_data = xmltodict.parse(t_data)
-        return xml_data
-    
-    except ConnectionError as e:
-        raise RequestConnectionError(e)
+    response = requests.get(url)
+    t_data = response.text
+
+    xml_data = xmltodict.parse(t_data)
+    return xml_data
+
     
