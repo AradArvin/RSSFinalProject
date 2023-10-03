@@ -197,13 +197,12 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
             if new_password and confirm_new_password:
                 if new_password == confirm_new_password:
                     instance.set_password(confirm_new_password)
+                    instance.save()
+
+                    return instance
                 else:
                     raise serializers.ValidationError("New Passwords don't match!")
             else:
                 raise serializers.ValidationError("New password or confirm password missing!")
-
-            instance.save()
-
-            return instance
         else:
             raise serializers.ValidationError("Old password is wrong!")
