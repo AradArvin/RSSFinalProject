@@ -55,7 +55,7 @@ class ChannelsMetaDataList(generics.ListAPIView): # Done
     serializer_class = ChannelListMetaDataSerializer
     pagination_class = CustomPagination
     filter_backends = [filters.SearchFilter,filters.OrderingFilter]
-    search_fields = ['title','category',]
+    search_fields = ['title',]
     ordering_fields = ['title','pub_date']
 
     def get_queryset(self):
@@ -81,12 +81,12 @@ class ChannelsMetaDataDetail(generics.GenericAPIView): # Done
 
 
 
-class ListRssEpisodes(generics.ListAPIView): 
+class ListRssEpisodes(generics.ListAPIView): # Done
     permission_classes = (AllowAny,)
     serializer_class = PodcastEpisodeListSerializer
     pagination_class = CustomPagination
     filter_backends = [filters.SearchFilter,filters.OrderingFilter]
-    search_fields = ['title','category',]
+    search_fields = ['title',]
     ordering_fields = ['title','pub_date','duration',]
 
     def get_queryset(self):
@@ -99,13 +99,13 @@ class ListRssEpisodes(generics.ListAPIView):
 
 
 
-class RssEpisodesDetail(generics.GenericAPIView):
+class RssEpisodesDetail(generics.GenericAPIView): # Done
     serializer_class = PodcastEpisodeDetailSerializer
     permission_classes = (AllowAny,)
     queryset = PodcastEpisodeData.objects.all()
     pagination_class = CustomPagination
     filter_backends = [filters.SearchFilter,filters.OrderingFilter]
-    search_fields = ['title','category',]
+    search_fields = ['title',]
     ordering_fields = ['title','pub_date','duration',]
 
     def get(self, request, *args, **kwargs):
