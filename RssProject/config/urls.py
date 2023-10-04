@@ -24,6 +24,7 @@ urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
     path('', include("accounts.urls")),
     path('', include("podcasts.urls")),
+    path('', include("interactions.urls")),
 ]
 
 
