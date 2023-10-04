@@ -51,7 +51,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         
         payload = token_decode(token)
         user_id = payload["user_id"]
-        if not cache_getter(user_id):
+        if not check_cache(user_id):
             raise TokenException('User is logged out!')
         
         return self._authenticate_credentials(request, token)
