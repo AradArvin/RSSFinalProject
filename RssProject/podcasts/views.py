@@ -116,35 +116,3 @@ class RssEpisodesDetail(generics.GenericAPIView): # Done
         return Response(serializer.data)
     
 
-
-
-class Top10ByAllUsersView(APIView):
-    # serializer_class = ""
-    permission_classes = (IsAuthenticated,)
-    pagination_class = CustomPagination
-    
-
-    def get(self, request):
-        # user = self.request.user.id
-        episodes = PodcastEpisodeData.objects.all()
-        recomended = episodes.annotate(likes=F("like")).annotate(quantity=Count("like")).values("channel__title", "quantity")
-
-
-        new_dict = defaultdict(int)
-        for r in recomended:
-            new_dict[r["channel__title"]] += int(r["quantity"])
-
-        recommended = [
-            {"rss": name, "likes": qut}
-            for name, qut in new_dict.items()
-        ]
-        sorted_recommendation = sorted(recommended, key=lambda x: x["likes"], reverse=True)
-
-        queryset = list()
-        for r in sorted_recommendation:
-            queryset.append(r)
-        
-        queryset = {"data":queryset}
-
-        return Response(queryset, status=status.HTTP_200_OK)
-    
