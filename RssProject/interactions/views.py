@@ -50,3 +50,19 @@ class LikeAPIView(APIView):
         
 
 
+
+class CommentAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CommentSerializer
+
+    def post(self, request, episode_id):
+        episode = PodcastEpisodeData.objects.get(id=episode_id)
+        
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=request.user, episode=episode)
+        
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+
+
