@@ -221,14 +221,14 @@ LOGGING = {
     'disable_existing_loggers': False,
     "formatters": {
         "verbose": {
-            "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s",
+            "format": "{levelname} {asctime} {module} {message}",
             "style": "{",
         },
     },
     'handlers': {
         'file': {
             'level': 'INFO',
-            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'class': 'logging.FileHandler',
             'filename': './debug.log',
             "formatter": "verbose",
         },
