@@ -147,3 +147,17 @@ class ReadItemsView(generics.ListAPIView):
     
 
 
+
+class RecommendationAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+    pagination_class = CustomPagination
+    serializer_class = PodcastEpisodeListSerializer
+
+
+    def get(self, request):
+        user = request.user
+
+        recommendation_data = podcast_recommendations(user)
+        serializer = self.serializer_class(recommendation_data, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
