@@ -1,5 +1,4 @@
 from django.db import models
-from interactions.models import Comment, Like, BookMark
 
 
 # Create your models here.
@@ -69,10 +68,6 @@ class PodcastEpisodeData(models.Model):
     image = models.TextField(null=True, blank=True)
     duration = models.CharField(max_length=512, null=True, blank=True)     
     enclosure = models.CharField(max_length=512, null=True, blank=True)  
-
-    comment = models.ForeignKey(Comment, on_delete=models.SET_NULL, null=True, blank=True)
-    like = models.ForeignKey(Like, on_delete=models.SET_NULL, null=True, blank=True)
-    book_mark = models.ForeignKey(BookMark, on_delete=models.SET_NULL, null=True, blank=True)
 
     
     @classmethod
