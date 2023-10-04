@@ -10,5 +10,4 @@ urlpatterns = [
     path("api/channel/<int:pk>/detail", ChannelsMetaDataDetail.as_view(), name="rss_channel_detail_api"),
     path("api/episode/<int:pk>/", ListRssEpisodes.as_view(), name="rss_episodes_api"),
     path("api/episode/<int:pk>/detail/", RssEpisodesDetail.as_view(), name="rss_episodes_detail_api"),
-    path("api/rec", Top10ByAllUsersView.as_view(), name="rec"),
 ]
