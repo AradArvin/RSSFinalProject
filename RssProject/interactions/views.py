@@ -98,3 +98,19 @@ class BookMarkAPIView(APIView):
         
 
 
+
+class LikeListAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+    pagination_class = CustomPagination
+    serializer_class = PodcastEpisodeListSerializer
+
+    def get(self, requset):
+        all_likes = Like.objects.filter(user=requset.user).values_list("episode", flat=True)
+        episodes = PodcastEpisodeData.objects.filter(id__in=all_likes)
+
+        serializer = self.serializer_class(episodes, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+
