@@ -130,3 +130,20 @@ class BookmarkListAPIView(APIView):
     
 
 
+
+class ReadItemsView(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    pagination_class = CustomPagination
+    serializer_class = PodcastEpisodeListSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        all_views = ViewdPodcasts.objects.filter(user=user).values_list("episode", flat=True)
+
+        queryset = PodcastEpisodeData.objects.filter(id__in=all_views)
+
+        return queryset
+    
+
+
