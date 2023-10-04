@@ -13,6 +13,16 @@ services:
     depends_on:
       - db
     
+    
+  hotreload:
+    build: .
+    command: sh -c "watchmedo auto-restart --directory=/app --pattern=*.py --recursive python3 manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app  
+    networks:
+      - main
+    depends_on:
+      - app
 
 
   db:
@@ -28,7 +38,6 @@ services:
     restart: always
     env_file:
       - .env
-
 
 
   redis:
