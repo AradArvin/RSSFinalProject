@@ -62,7 +62,7 @@ services:
   celery:
     restart: always
     build: .
-    command: celery -A config worker -l INFO
+    command: celery -A config worker -l info
     networks:
       - main
     volumes:
@@ -72,6 +72,18 @@ services:
       - redis
       - app
 
+
+  celery-beat:
+    build: .
+    command: celery -A config beat -l info
+    networks:
+      - main
+    volumes:
+      - celery-beat:/celery-beat
+    depends_on:
+      - rabbitmq
+      - redis
+      - app
 
 
 networks:
@@ -83,3 +95,4 @@ volumes:
   redis:
   rabbit:
   celery:
+  celery-beat:
