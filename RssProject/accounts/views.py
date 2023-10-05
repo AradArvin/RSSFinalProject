@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.generics import RetrieveUpdateAPIView, UpdateAPIView
+from rest_framework.generics import RetrieveUpdateAPIView, UpdateAPIView, GenericAPIView
 from rest_framework import status
 
 
@@ -158,3 +158,25 @@ class ForgetPasswordView(GenericAPIView):
         return Response(status=status.HTTP_200_OK)
     
 
+
+
+class SetNewPasswordView(GenericAPIView):
+    serializer_class = SetNewPasswordSerializer
+    permission_classes = (AllowAny,)
+    
+    def patch(self, request, *args, **kwargs):
+        
+        hex = request.get("hex")
+        user_id = int(hex[-1])
+        user = CustomUser.objects.get(id=user_id)
+        
+        data = request.data.get('user', {})
+
+        serializer = self.serializer_class(
+            user, data=data, partial=True
+        )
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
