@@ -139,3 +139,22 @@ class ChangePasswordView(UpdateAPIView):
 
         msg = {'status': 'Password changed succesfully.'}
         return Response(msg, status=status.HTTP_200_OK)
+    
+
+
+
+class ForgetPasswordView(GenericAPIView):
+    permission_classes = (AllowAny,)
+    renderer_classes = (UserJSONRenderer,)
+    serializer_class = ForgetPasswordSerializer
+
+    def post(self, request):
+
+        data = request.data.get('user', {})
+
+        serializer = self.serializer_class(data=data)
+        serializer.is_valid(raise_exception=True)
+
+        return Response(status=status.HTTP_200_OK)
+    
+
