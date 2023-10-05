@@ -2,9 +2,12 @@ from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password
 from rest_framework import status
+from django.conf import settings
+from uuid import uuid4
+
 from .models import CustomUser
 from .utils import *
-
+from .tasks import send_feedback_email_task
 
 
 
@@ -229,3 +232,27 @@ class ForgetPasswordSerializer(serializers.Serializer):
     
 
 
+
+class SetNewPasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField(max_length=128, min_length=8, write_only=True)
+    confirm_new_password = serializers.CharField(max_length=128, min_length=8, write_only=True)
+
+    
+    def update(self, instance, validated_data):
+
+        new_password = validated_data.get("new_password", None)
+        confirm_new_password = validated_data.get("confirm_new_password", None)
+
+        if new_password and confirm_new_password:
+            if new_password == confirm_new_password:
+                instance.set_password(confirm_new_password)
+                instance.save()
+
+                return instance
+            else:
+                raise serializers.ValidationError("Passwords don't match!")
+        else:
+            raise serializers.ValidationError("password or confirm password missing!")
+
+
+        
