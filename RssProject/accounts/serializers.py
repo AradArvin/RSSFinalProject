@@ -206,3 +206,26 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("New password or confirm password missing!")
         else:
             raise serializers.ValidationError("Old password is wrong!")
+        
+
+
+
+class ForgetPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate(self, attrs):
+        
+        email = attrs.get('email', None)
+        user = CustomUser.objects.get(email=email)
+
+        if not user.exists():
+            raise serializers.ValidationError("User with this email does not exist!")
+        
+        msg = f"{settings.BASE_URL}/set-pass/{uuid4().hex}{user.id}/"
+
+        send_feedback_email_task.delay(email, msg)
+
+        return super().validate(attrs)
+    
+
+
