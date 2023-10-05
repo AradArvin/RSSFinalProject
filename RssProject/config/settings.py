@@ -13,7 +13,8 @@ from pathlib import Path
 import os
 import sys
 from dotenv import load_dotenv
-
+from celery.schedules import crontab
+import podcasts.tasks
 
 # Initialise environment variables
 load_dotenv()
@@ -189,11 +190,22 @@ REST_FRAMEWORK = {
 
 
 # Celery settings
+
 CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672/'
 CELERY_RESULT_BACKEND = "redis://redis:6379/1"
 CELERY_TASK_ANNOTATIONS = {'*': {'rate_limit': '100/m'}}
-# CELERY_TASK_ANNOTATIONS = {'tasks.<task_name>': {'rate_limit': '10/m'}}
-# 'amqp://guest:guest@rabbitmq:5672/'
+
+
+
+# Celery-Beat settings
+
+CELERY_BEAT_SCHEDULE = {
+    "rss_parsing": {
+        "task": "podcasts.tasks.task_rss_parsing",
+        "schedule": crontab(hour="0"),
+    },
+}
+
 
 
 # Redis
