@@ -231,25 +231,38 @@ BASE_URL = 'http://127.0.0.1:8000'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    "formatters": {
-        "verbose": {
-            "format": "{levelname} {asctime} {module} {message}",
-            "style": "{",
-        },
-    },
     'handlers': {
-        'file': {
+        'logstash': {
             'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': './debug.log',
-            "formatter": "verbose",
+            'class': 'logstash.TCPLogstashHandler',
+            'host': 'localhost',
+            'port': 5959,
+            'version': 1,
+            'message_type': 'django',
+            'fqdn': False,
+            'tags': ['celery','django.server'],
         },
     },
     'loggers': {
         'celery': {
-            'handlers': ['file'],
+            'handlers': ['logstash'],
             'level': 'INFO',
-            'propagate': False,
+            'propagate': True,
         },
+        'django.server': {  
+            'handlers': ['logstash'],
+            'level': 'INFO',
+      }
     },
 }
+
+
+# SMTP Mail service with decouple
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = "sender_email_adress"
+EMAIL_HOST_PASSWORD = "sender_email_password"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
