@@ -11,7 +11,7 @@ from collections import defaultdict
 from django.db.models import Count, F
 from .models import *
 from .serializers import *
-
+from interactions.models import ViewdPodcasts
 # Create your views here.
 
 
@@ -112,6 +112,12 @@ class RssEpisodesDetail(generics.GenericAPIView): # Done
 
         episode = self.get_object()
         serializer = self.get_serializer(episode)
+
+        if request.user.exists():
+            user = request.user
+
+        if user.is_authenticated:
+            ViewdPodcasts.objects.get_or_create(user=user, episode=episode)
 
         return Response(serializer.data)
     
