@@ -25,6 +25,13 @@ class RegistrationAPIView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
+        log_data = {
+                "username": user["username"],
+                "message": f"User: {user['username']} successfully registered",
+                "status": "register"
+            }
+        publisher(log_data)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
 
