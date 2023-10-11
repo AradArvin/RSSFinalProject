@@ -1,6 +1,6 @@
 from django.db import models
-from accounts.models import CustomUser
-from podcasts.models import PodcastEpisodeData
+from accounts.models import *
+from podcasts.models import PodcastEpisodeData, RssFeedSource
 
 # Create your models here.
 
@@ -56,10 +56,10 @@ class ViewdPodcasts(models.Model):
 
 
 
+class SubScribe(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    rss = models.ForeignKey(RssFeedSource, on_delete=models.CASCADE)
 
 
-
-
-
-class SubScribe(models.Model):# Unused for now.
-    subscribed = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    def __str__(self) -> str:
+        return f"Subscribed by {self.user.username}"
