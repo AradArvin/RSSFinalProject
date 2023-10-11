@@ -35,3 +35,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.username
+    
+
+
+class Notif(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=128, null=True, blank=True)
+
+
+    def __str__(self) -> str:
+        return f"Update for {self.user}: {self.log}"
