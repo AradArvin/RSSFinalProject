@@ -14,7 +14,7 @@ import os
 import sys
 from dotenv import load_dotenv
 from celery.schedules import crontab
-import podcasts.tasks
+
 
 # Initialise environment variables
 load_dotenv()
@@ -59,6 +59,10 @@ THIRDPARTY_APPS = [
     'rest_framework.authtoken',
     'debug_toolbar',
     'django_filters',
+    'django_elasticsearch_dsl',
+    'django_elasticsearch_dsl_drf',
+    'django.contrib.staticfiles',
+    'drf_yasg',
 ]
 
 INSTALLED_APPS += LOCAL_APPS
@@ -193,6 +197,7 @@ REST_FRAMEWORK = {
 
 CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672/'
 CELERY_RESULT_BACKEND = "redis://redis:6379/1"
+CELERY_TIMEZONE = 'Asia/Tehran'
 CELERY_TASK_ANNOTATIONS = {'*': {'rate_limit': '100/m'}}
 
 
@@ -226,35 +231,61 @@ CACHES = {
 BASE_URL = 'http://127.0.0.1:8000'
 
 
-# Logging
+# Logstash Logging
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'logstash': {
+#             'level': 'INFO',
+#             'class': 'logstash.TCPLogstashHandler',
+#             'host': 'localhost',
+#             'port': 5959,
+#             'version': 1,
+#             'message_type': 'django',
+#             'fqdn': False,
+#             'tags': ['django.server',],
+#         },
+#     },
+#     'loggers': {
+#         'django.request': {  
+#             'handlers': ['logstash'],
+#             'level': 'INFO',
+#             'propagate': True,
+#       }
+#     }
+# }
+
+
+# Celery Logging
 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {message}",
+            "style": "{",
+        },
+    },
     'handlers': {
-        'logstash': {
+        'file': {
             'level': 'INFO',
-            'class': 'logstash.TCPLogstashHandler',
-            'host': 'localhost',
-            'port': 5959,
-            'version': 1,
-            'message_type': 'django',
-            'fqdn': False,
-            'tags': ['celery','django.server'],
+            'class': 'logging.FileHandler',
+            'filename': './debug.log',
+            "formatter": "verbose",
         },
     },
     'loggers': {
-        'celery': {
-            'handlers': ['logstash'],
+        'celery_log': {
+            'handlers': ['file'],
             'level': 'INFO',
-            'propagate': True,
+            'propagate': False,
         },
-        'django.server': {  
-            'handlers': ['logstash'],
-            'level': 'INFO',
-      }
     },
 }
+
 
 
 # SMTP Mail service with decouple
@@ -268,7 +299,7 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
-# Elastic search
+# ElasticSearch
 
 ELASTICSEARCH_DSL = {
     'default': {
