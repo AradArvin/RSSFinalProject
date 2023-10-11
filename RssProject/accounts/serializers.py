@@ -8,7 +8,7 @@ from uuid import uuid4
 from .models import CustomUser
 from .utils import *
 from .tasks import send_feedback_email_task
-
+from .publishers import publisher
 
 
 class RegisterationSerializer(serializers.ModelSerializer):
@@ -66,6 +66,13 @@ class LoginSerializer(serializers.Serializer):
         refresh_token = refresh_token_gen(user.pk)
 
         cache_setter(refresh_token)
+
+        log_data = {
+                "username": user.username,
+                "message": f"User: {user.username} successfull login",
+                "status": "login"
+            }
+        publisher(log_data)
 
         validated_data = {
             'email': user.email,
