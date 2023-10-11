@@ -7,3 +7,13 @@ def callback(ch, method, property, body):
 
 
 
+
+def register_consumer():
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
+    ch = connection.channel()
+    ch.queue_declare(queue='register')
+    ch.basic_consume(queue='register', on_message_callback=callback)
+    ch.start_consuming()
+
+
+
