@@ -12,18 +12,7 @@ services:
       - 8000:8000
     depends_on:
       - db
-    
-    
-  hotreload:
-    build: .
-    command: sh -c "watchmedo auto-restart --directory=/app --pattern=*.py --recursive python3 manage.py runserver 0.0.0.0:8000"
-    volumes:
-      - .:/app  
-    networks:
-      - main
-    depends_on:
-      - app
-      - elasticsearch
+    restart: always
 
 
   db:
@@ -36,20 +25,25 @@ services:
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
     networks:
       - main
-    restart: always
     env_file:
       - .env
+    restart: always
 
   
   elasticsearch:
     image: elasticsearch:8.9.0
     volumes:
       - esdata:/usr/share/elasticsearch/data
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      xpack.security.enabled: 'false'
     networks:
       - main
     ports:
       - 9200:9200
-    memory: 500M
+    mem_limit: 1g
+    restart: always
 
 
   logstash:
@@ -63,6 +57,7 @@ services:
       - 5959:5959
     depends_on:
       - elasticsearch
+    restart: always
 
 
   kibana:
@@ -83,12 +78,15 @@ services:
       - main
     volumes:
       - redis:/redis
-    
+
 
   rabbitmq:
     image: "rabbitmq:3-management"
     networks:
       - main
+    # environment:
+    #   - RABBITMQ_DEFAULT_USER: "guest"
+    #   - RABBITMQ_DEFAULT_PASS: "guest"
     ports:
       - 5672:5672
       - 15672:15672
@@ -123,6 +121,21 @@ services:
       - app
 
 
+  messages-queue:
+    build: .
+    command: python3 manage.py start_consumers
+    networks:
+      - main
+    volumes:
+      - consumer:/consumer
+    depends_on:
+      - app
+      - rabbitmq
+    restart: always
+
+
+
+
 networks:
   main:
 
@@ -135,3 +148,4 @@ volumes:
   celery-beat:
   esdata:
   logstash:
+  consumer:
