@@ -1,3 +1,9 @@
+import pika
+import json
+
+from interactions.models import CustomUser, Notif
+
+
 
 def callback(ch, method, property, body):
     body = json.loads(body)
@@ -15,5 +21,14 @@ def register_consumer():
     ch.basic_consume(queue='register', on_message_callback=callback)
     ch.start_consuming()
 
+
+
+
+def login_consumer():
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
+    ch = connection.channel()
+    ch.queue_declare(queue='login')
+    ch.basic_consume(queue='login', on_message_callback=callback)
+    ch.start_consuming()
 
 
