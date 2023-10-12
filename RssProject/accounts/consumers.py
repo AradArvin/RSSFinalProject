@@ -1,14 +1,15 @@
 import pika
 import json
 
-from interactions.models import CustomUser, Notif
+from interactions.models import CustomUser, Notif, UserNotif
 
 
 
 def callback(ch, method, property, body):
     body = json.loads(body)
     user = CustomUser.objects.get(username=body["username"])
-    Notif.objects.create(user=user, message=body["message"], status=body["routing_key"])
+    notif = Notif.objects.create(message=body["message"], status=body["status"])
+    UserNotif(user=user, notification=notif)
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
@@ -51,3 +52,10 @@ def rss_update_consumer():
     ch.start_consuming()
 
 
+
+def rss_parser_consumer():
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
+    ch = connection.channel()
+    ch.queue_declare(queue='ParseRss')
+    ch.basic_consume(queue='ParseRss', on_message_callback=rss_callback)
+    ch.start_consuming()
