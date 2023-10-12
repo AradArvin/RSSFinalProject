@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from .models import RssFeedSource, RssPodcastChannelMetaData, PodcastEpisodeData
-from .tasks import task_rss_parsing, logger
+from .tasks import task_rss_parsing
 from django.conf import settings
-
+from accounts.publishers import publisher
 
 
 
@@ -15,12 +15,24 @@ class RssParserSerializer(serializers.Serializer):
         link = attrs.get("rss_link", None)
         
         if not link:
-            logger.info("The podcasts are being updated...")
+
+            log_data = {
+                "message": f"Rss feeds are being updated",
+                "status": "UpdateRss"
+            }
+
+            publisher(log_data)
+
             for rss_obj in RssFeedSource.objects.all():
                 task_rss_parsing.delay(rss_obj.rss_link)
         else:
             task_rss_parsing.delay(link)
-            logger.info("Your rss link is being parsed")
+            log_data = {
+                "message": f"Rss feed is being parsed",
+                "status": "ParseRss"
+            }
+
+            publisher(log_data)
 
         validated_data = {
             'notice': 'the rss feed is being parsed'
