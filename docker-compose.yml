@@ -84,14 +84,12 @@ services:
     image: "rabbitmq:3-management"
     networks:
       - main
-    # environment:
-    #   - RABBITMQ_DEFAULT_USER: "guest"
-    #   - RABBITMQ_DEFAULT_PASS: "guest"
     ports:
       - 5672:5672
       - 15672:15672
     volumes:
-      - rabbit:/rabbitmq
+      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_log:/var/log/rabbitmq
 
 
   celery:
@@ -121,13 +119,13 @@ services:
       - app
 
 
-  messages-queue:
+  message-queue:
     build: .
     command: python3 manage.py start_consumers
     networks:
       - main
     volumes:
-      - consumer:/consumer
+      - queue:/var/lib/queue
     depends_on:
       - app
       - rabbitmq
@@ -143,9 +141,10 @@ volumes:
   app:
   postgres-data:
   redis:
-  rabbit:
+  rabbitmq_data:
+  rabbitmq_log:
   celery:
   celery-beat:
   esdata:
   logstash:
-  consumer:
+  queue:
