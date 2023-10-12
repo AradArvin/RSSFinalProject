@@ -39,7 +39,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
 class Notif(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=128, null=True, blank=True)
@@ -47,3 +46,9 @@ class Notif(models.Model):
 
     def __str__(self) -> str:
         return f"Update for {self.user}: {self.log}"
+    
+
+
+class UserNotif(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
+    notification = models.ForeignKey(Notif, on_delete=models.PROTECT)
