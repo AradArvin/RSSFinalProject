@@ -232,60 +232,54 @@ CACHES = {
 BASE_URL = 'http://127.0.0.1:8000'
 
 
-# Logstash Logging
-
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'logstash': {
-#             'level': 'INFO',
-#             'class': 'logstash.TCPLogstashHandler',
-#             'host': 'localhost',
-#             'port': 5959,
-#             'version': 1,
-#             'message_type': 'django',
-#             'fqdn': False,
-#             'tags': ['django.server',],
-#         },
-#     },
-#     'loggers': {
-#         'django.request': {  
-#             'handlers': ['logstash'],
-#             'level': 'INFO',
-#             'propagate': True,
-#       }
-#     }
-# }
-
-
-# Celery Logging
+# Elastic Logging
 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    "formatters": {
-        "verbose": {
-            "format": "{levelname} {asctime} {module} {message}",
-            "style": "{",
-        },
-    },
     'handlers': {
-        'file': {
+        'elasticsearch': {
             'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': './debug.log',
-            "formatter": "verbose",
+            'class': 'main.logger_handler.ElasticHandler',
         },
     },
     'loggers': {
-        'celery_log': {
-            'handlers': ['file'],
+        'elastic_logger': {  
+            'handlers': ['elasticsearch'],
             'level': 'INFO',
-            'propagate': False,
-        },
-    },
+            'propagate': True,
+      }
+    }
 }
+
+
+# Celery Logging
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     "formatters": {
+#         "verbose": {
+#             "format": "{levelname} {asctime} {module} {message}",
+#             "style": "{",
+#         },
+#     },
+#     'handlers': {
+#         'file': {
+#             'level': 'INFO',
+#             'class': 'logging.FileHandler',
+#             'filename': './debug.log',
+#             "formatter": "verbose",
+#         },
+#     },
+#     'loggers': {
+#         'celery_log': {
+#             'handlers': ['file'],
+#             'level': 'INFO',
+#             'propagate': False,
+#         },
+#     },
+# }
 
 
 
