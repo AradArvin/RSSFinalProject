@@ -32,3 +32,12 @@ def login_consumer():
     ch.start_consuming()
 
 
+
+
+
+def rss_callback(ch, method, property, body):
+    body = json.loads(body)
+    Notif.objects.create(message=body["message"], status=body["status"])
+    ch.basic_ack(delivery_tag=method.delivery_tag)
+
+
