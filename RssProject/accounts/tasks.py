@@ -2,7 +2,6 @@ from celery import shared_task
 from django.core.mail import send_mail
 import logging
 
-logger = logging.getLogger("celery_log")
 
 @shared_task()
 def send_feedback_email_task(email_address, message):
@@ -15,5 +14,4 @@ def send_feedback_email_task(email_address, message):
         fail_silently=False,
     )
 
-    logger.info("Email Sent...")
 
