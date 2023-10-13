@@ -46,18 +46,18 @@ services:
     restart: always
 
 
-  logstash:
-    image: logstash:8.9.0
-    volumes:
-      - logstash:/logstash_dir
-    command: logstash -f /logstash_dir/logstash.conf
-    networks:
-      - main
-    ports:
-      - 5959:5959
-    depends_on:
-      - elasticsearch
-    restart: always
+  # logstash:
+  #   image: logstash:8.9.0
+  #   volumes:
+  #     - logstash:/logstash_dir
+  #   command: logstash -f /logstash_dir/logstash.conf
+  #   networks:
+  #     - main
+  #   ports:
+  #     - 5959:5959
+  #   depends_on:
+  #     - elasticsearch
+  #   restart: always
 
 
   kibana:
@@ -146,5 +146,5 @@ volumes:
   celery:
   celery-beat:
   esdata:
-  logstash:
+  # logstash:
   queue:
