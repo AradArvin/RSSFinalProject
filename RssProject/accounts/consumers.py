@@ -54,11 +54,14 @@ def consumer_starter(queue: str):
     ch.basic_consume(queue=queue, on_message_callback=select_callback(queue))
     ch.start_consuming()
 
+    
 
+def select_callback(queue):
+    callback_func = {
+        "login": callback,
+        "register": callback,
+        "UpdateRss": rss_callback,
+        "ParseRss": rss_callback
+    }
+    return callback_func.get(queue)
 
-def rss_parser_consumer():
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
-    ch = connection.channel()
-    ch.queue_declare(queue='ParseRss')
-    ch.basic_consume(queue='ParseRss', on_message_callback=rss_callback)
-    ch.start_consuming()
