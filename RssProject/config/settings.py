@@ -59,9 +59,9 @@ THIRDPARTY_APPS = [
     'rest_framework.authtoken',
     'debug_toolbar',
     'django_filters',
+    'django_celery_beat',
     'django_elasticsearch_dsl',
     'django_elasticsearch_dsl_drf',
-    'django.contrib.staticfiles',
     'drf_yasg',
 ]
 
