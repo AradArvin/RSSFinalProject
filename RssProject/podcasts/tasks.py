@@ -1,6 +1,8 @@
 from celery import Task
 from celery import shared_task
 import logging
+logger = logging.getLogger("elastic_logger")
+
 
 from .parsers import save_data_to_db
 
