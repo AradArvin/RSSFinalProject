@@ -2,6 +2,7 @@
 
 services:
   app:
+    container_name: django-app
     build: .
     command: sh -c "python3 manage.py makemigrations accounts interactions podcasts && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
     volumes:
@@ -17,6 +18,7 @@ services:
 
   db:
     image: postgres:14
+    container_name: postgresql-db
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
@@ -32,6 +34,7 @@ services:
   
   elasticsearch:
     image: elasticsearch:8.9.0
+    container_name: elasticsearch
     volumes:
       - esdata:/usr/share/elasticsearch/data
     environment:
@@ -46,22 +49,9 @@ services:
     restart: always
 
 
-  # logstash:
-  #   image: logstash:8.9.0
-  #   volumes:
-  #     - logstash:/logstash_dir
-  #   command: logstash -f /logstash_dir/logstash.conf
-  #   networks:
-  #     - main
-  #   ports:
-  #     - 5959:5959
-  #   depends_on:
-  #     - elasticsearch
-  #   restart: always
-
-
   kibana:
     image: kibana:8.9.0
+    container_name: kibana
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     networks:
@@ -74,6 +64,7 @@ services:
 
   redis:
     image: redis:7
+    container_name: redis
     networks:
       - main
     volumes:
@@ -82,6 +73,7 @@ services:
 
   rabbitmq:
     image: "rabbitmq:3-management"
+    container_name: rabbitmq
     networks:
       - main
     ports:
@@ -93,13 +85,14 @@ services:
 
 
   celery:
-    restart: always
     build: .
+    container_name: celery
     command: celery -A config worker -l info
     networks:
       - main
     volumes:
       - celery:/celery
+    restart: always
     depends_on:
       - rabbitmq
       - redis
@@ -108,6 +101,7 @@ services:
 
   celery-beat:
     build: .
+    container_name: celery-beat
     command: celery -A config beat -l info
     networks:
       - main
@@ -121,6 +115,7 @@ services:
 
   message-queue:
     build: .
+    container_name: rabbitmq-message-queue
     command: python3 manage.py start_consumers
     networks:
       - main
@@ -146,5 +141,4 @@ volumes:
   celery:
   celery-beat:
   esdata:
-  # logstash:
   queue:
