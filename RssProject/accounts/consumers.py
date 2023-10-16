@@ -9,7 +9,7 @@ def callback(ch, method, property, body):
     body = json.loads(body)
     user = CustomUser.objects.get(username=body["username"])
     notif = Notif.objects.create(message=body["message"], status=body["status"])
-    UserNotif(user=user, notification=notif)
+    UserNotif.objects.create(user=user, notification=notif)
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
