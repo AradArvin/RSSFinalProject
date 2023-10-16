@@ -14,7 +14,7 @@ import os
 import sys
 from dotenv import load_dotenv
 from celery.schedules import crontab
-
+import podcasts.tasks
 
 # Initialise environment variables
 load_dotenv()
