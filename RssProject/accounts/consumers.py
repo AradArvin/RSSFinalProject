@@ -47,12 +47,11 @@ def rss_callback(ch, method, property, body):
 
 
 
-
-def rss_update_consumer():
+def consumer_starter(queue: str):
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
     ch = connection.channel()
-    ch.queue_declare(queue='UpdateRss')
-    ch.basic_consume(queue='UpdateRss', on_message_callback=rss_callback)
+    ch.queue_declare(queue=queue)
+    ch.basic_consume(queue=queue, on_message_callback=select_callback(queue))
     ch.start_consuming()
 
 
