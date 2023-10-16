@@ -16,19 +16,17 @@ class RssParserSerializer(serializers.Serializer):
         
         if not link:
 
-            log_data = {
-                "message": f"Rss feeds are being updated",
-                "status": "UpdateRss"
-            }
-
-            publisher(log_data)
-
             for rss_obj in RssFeedSource.objects.all():
                 task_rss_parsing.delay(rss_obj.rss_link)
+                log_data = {
+                "message": f"{rss_obj.rss_name} is updated",
+                "status": "UpdateRss"
+                }
+                publisher(log_data)
         else:
             task_rss_parsing.delay(link)
             log_data = {
-                "message": f"Rss feed is being parsed",
+                "message": f"{link} rss is being created",
                 "status": "ParseRss"
             }
 
