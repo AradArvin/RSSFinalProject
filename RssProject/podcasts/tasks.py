@@ -34,6 +34,19 @@ class BaseTaskWithRetry(Task):
         return super().on_retry(exc, task_id, args, kwargs, einfo)
     
 
+    def on_success(self, retval, task_id, args, kwargs):
+        log_data = {
+            "task_id":task_id,
+            "event":f"Celery task >>> {self.name}",
+            "args":args,
+            "kwargs":kwargs,
+            "ran_on":datetime.now(timezone(settings.TIME_ZONE)),
+            "status":"success"
+        }
+        logger.info(json.dumps(log_data))
+        return super().on_success(retval, task_id, args, kwargs)
+    
+
 
 
 @shared_task(bind=True, base=BaseTaskWithRetry)
