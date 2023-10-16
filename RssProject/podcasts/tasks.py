@@ -14,6 +14,8 @@ from .parsers import save_data_to_db
 
 
 class BaseTaskWithRetry(Task):
+    autoretry_for = (Exception,)
+    retry_kwargs = {'max_retries': 5}
     retry_backoff = 2
     retry_jitter=True
 
