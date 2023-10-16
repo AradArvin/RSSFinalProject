@@ -7,7 +7,10 @@ class Command(BaseCommand):
     help = 'Start massage consumers'
 
     def handle(self, *args, **options):
-        login_consumer()
-        register_consumer()
-        rss_update_consumer()
-        rss_parser_consumer
+        
+        queues = ["login", "register", "UpdateRss", "ParseRss"]
+        
+        for queue in queues:
+            consumer_starter(queue=queue)
+        
+        self.stdout("Consumers are running...")
