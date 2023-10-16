@@ -1,7 +1,8 @@
 from datetime import datetime
+from pytz import timezone
 from typing import Any
 from elasticsearch import Elasticsearch
-
+from django.conf import settings
 
 
 class ElasticsearchAPIMiddleWare:
@@ -17,7 +18,7 @@ class ElasticsearchAPIMiddleWare:
         user = request.user if hasattr(request, "user") else None
 
         log_data = {
-        'timestamp': datetime.now(),
+        'timestamp': datetime.now(timezone(settings.TIME_ZONE)),
         'request_method': request.method,
         'request_path': request.path,
         'request_ip': ip_address,
@@ -36,7 +37,7 @@ class ElasticsearchAPIMiddleWare:
         ip_address = get_client_ip_address(request)
 
         log_data = {
-            'timestamp': datetime.now(),
+            'timestamp': datetime.now(timezone(settings.TIME_ZONE)),
             'request_method': request.method,
             'request_path': request.path,
             'request_ip': ip_address,
