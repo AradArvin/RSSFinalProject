@@ -47,6 +47,21 @@ class BaseTaskWithRetry(Task):
         return super().on_success(retval, task_id, args, kwargs)
     
 
+    def on_failure(self, exc, task_id, args, kwargs, einfo):
+        log_data = {
+            "task_id":task_id,
+            "exe":str(exc),
+            "event":f"Celery task >>> {self.name}",
+            "args":args,
+            "kwargs":kwargs,
+            "error_info":einfo,
+            "happend_on":datetime.now(timezone(settings.TIME_ZONE)),
+            "status":"failure"
+        }
+        logger.critical(json.dumps(log_data))
+        return super().on_failure(exc, task_id, args, kwargs, einfo)
+
+
 
 
 @shared_task(bind=True, base=BaseTaskWithRetry)
