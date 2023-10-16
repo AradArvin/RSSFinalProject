@@ -240,47 +240,17 @@ LOGGING = {
     'handlers': {
         'elasticsearch': {
             'level': 'INFO',
-            'class': 'main.logger_handler.ElasticHandler',
+            'class': 'config.elastic_logger_handler.ElasticSearchHandler',
         },
     },
     'loggers': {
         'elastic_logger': {  
             'handlers': ['elasticsearch'],
             'level': 'INFO',
-            'propagate': True,
+            'propagate': False,
       }
     }
 }
-
-
-# Celery Logging
-
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     "formatters": {
-#         "verbose": {
-#             "format": "{levelname} {asctime} {module} {message}",
-#             "style": "{",
-#         },
-#     },
-#     'handlers': {
-#         'file': {
-#             'level': 'INFO',
-#             'class': 'logging.FileHandler',
-#             'filename': './debug.log',
-#             "formatter": "verbose",
-#         },
-#     },
-#     'loggers': {
-#         'celery_log': {
-#             'handlers': ['file'],
-#             'level': 'INFO',
-#             'propagate': False,
-#         },
-#     },
-# }
-
 
 
 # SMTP Mail service with decouple
