@@ -19,6 +19,21 @@ class BaseTaskWithRetry(Task):
     retry_backoff = 2
     retry_jitter=True
 
+    def on_retry(self, exc, task_id, args, kwargs, einfo):
+
+        log_data = {
+            "task_id":task_id,
+            "exe":str(exc),
+            "event":f"Celery task >>> {self.name}",
+            "args":args,
+            "kwargs":kwargs,
+            "happend_on":datetime.now(timezone(settings.TIME_ZONE)),
+            "status":"retry"
+        }
+        logger.exception(json.dumps(log_data))
+        return super().on_retry(exc, task_id, args, kwargs, einfo)
+    
+
 
 
 @shared_task(bind=True, base=BaseTaskWithRetry)
