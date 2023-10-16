@@ -38,7 +38,11 @@ def login_consumer():
 
 def rss_callback(ch, method, property, body):
     body = json.loads(body)
-    Notif.objects.create(message=body["message"], status=body["status"])
+    all_subscribed = SubScribe.objects.all()
+    for sub in all_subscribed:
+        notif = Notif.objects.create(message=body["message"], status=body["status"])
+        user = sub.user
+        UserNotif.objects.create(user=user, notification=notif)
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
