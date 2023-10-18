@@ -3,7 +3,20 @@ from .models import *
 # Register your models here.
 
 
-admin.site.register(Comment)
-admin.site.register(Like)
-admin.site.register(SubScribe)
-admin.site.register(BookMark)
+@admin.register(Comment)
+class CommentDisplay(admin.ModelAdmin):
+    pass
+
+@admin.register(Like)
+class LikeDisplay(admin.ModelAdmin):
+    pass
+
+
+@admin.register(SubScribe)
+class SubScribeDisplay(admin.ModelAdmin):
+    pass
+
+
+@admin.register(BookMark)
+class BookMarkDisplay(admin.ModelAdmin):
+    pass
