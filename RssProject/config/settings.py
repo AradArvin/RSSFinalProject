@@ -13,6 +13,7 @@ from pathlib import Path
 import os
 import sys
 from dotenv import load_dotenv
+from django.utils.translation import gettext_lazy as _
 from celery.schedules import crontab
 import podcasts.tasks
 
@@ -63,6 +64,7 @@ THIRDPARTY_APPS = [
     'django_elasticsearch_dsl',
     'django_elasticsearch_dsl_drf',
     'drf_yasg',
+    'rosetta',
 ]
 
 INSTALLED_APPS += LOCAL_APPS
@@ -159,7 +161,18 @@ TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
+USE_L10N = True
+
 USE_TZ = True
+
+LANGUAGES = [
+    ("fa", _("Persian")),
+    ("en", _("English")),
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
 
 
 # Static files (CSS, JavaScript, Images)
