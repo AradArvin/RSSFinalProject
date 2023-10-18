@@ -4,6 +4,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
+from django.utils.translation import gettext_lazy as _
+
 from .models import *
 from .serializers import *
 from podcasts.serializers import PodcastEpisodeListSerializer
@@ -44,7 +46,7 @@ class LikeAPIView(APIView):
             serializer = self.serializer_class(like)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            msg = {'status':'This episode is already liked!'}
+            msg = {'status': _('This episode is already liked!')}
             return Response(msg, status=status.HTTP_200_OK)
         
     
@@ -53,10 +55,10 @@ class LikeAPIView(APIView):
         try:
             like = Like.objects.get(user=request.user, episode=episode)
             like.delete()
-            msg = {'status':'Unliked!'}
+            msg = {'status': _('Unliked!')}
             return Response(msg, status=status.HTTP_204_NO_CONTENT)
         except Like.DoesNotExist:
-            msg = {'status':'This episode is not liked!'}
+            msg = {'status': _('This episode is not liked!')}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
         
 
@@ -88,10 +90,10 @@ class BookMarkAPIView(APIView):
 
         if created:
             serializer = BookMarkSerializer(bookmarked_episode)
-            msg = {'status':'Episode bookmarked.'}
+            msg = {'status': _('Episode bookmarked.')}
             return Response(msg, status=status.HTTP_201_CREATED)
         else:
-            msg = {'status':'This episode is already bookmarked'}
+            msg = {'status': _('This episode is already bookmarked')}
             return Response(msg, status=status.HTTP_200_OK)
 
 
@@ -101,10 +103,10 @@ class BookMarkAPIView(APIView):
             bookmarked_episode = BookMark.objects.get(user=request.user, episode=episode)
             bookmarked_episode.delete()
 
-            msg = {'status':'No longer bookmarked'}
+            msg = {'status': _('No longer bookmarked')}
             return Response(msg, status=status.HTTP_204_NO_CONTENT)
         except BookMark.DoesNotExist:
-            msg = {'status':'This episode was not bookmarked'}
+            msg = {'status': _('This episode was not bookmarked')}
             return Response(msg, status=status.HTTP_404_NOT_FOUND)
         
 

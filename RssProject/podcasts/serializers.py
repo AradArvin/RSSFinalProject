@@ -1,10 +1,10 @@
+from django.conf import settings
 from rest_framework import serializers
+from django.utils.translation import gettext_lazy as _
+
+from accounts.publishers import publisher
 from .models import RssFeedSource, RssPodcastChannelMetaData, PodcastEpisodeData
 from .tasks import task_rss_parsing
-from django.conf import settings
-from accounts.publishers import publisher
-
-
 
 class RssParserSerializer(serializers.Serializer):
     notice = serializers.CharField(max_length=128, read_only=True)
@@ -33,7 +33,7 @@ class RssParserSerializer(serializers.Serializer):
             publisher(log_data)
 
         validated_data = {
-            'notice': 'the rss feed is being parsed'
+            'notice': _('the rss feed is being parsed')
         }
 
         return validated_data
