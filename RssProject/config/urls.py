@@ -16,9 +16,10 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, include, re_path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.conf.urls.i18n import i18n_patterns
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -49,6 +50,11 @@ urlpatterns = [
     path('', include("podcasts.urls")),
     path('', include("interactions.urls")),
 ]
+
+urlpatterns += i18n_patterns(
+    path('i18n/', include('django.conf.urls.i18n')),
+    path('rosetta/', include('rosetta.urls')),
+)
 
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
