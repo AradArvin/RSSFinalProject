@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password
-from rest_framework import status
 from django.conf import settings
+from django.utils.translation import gettext_lazy as _
 from uuid import uuid4
 
 from .models import CustomUser
@@ -42,25 +42,25 @@ class LoginSerializer(serializers.Serializer):
         password = attrs.get('password', None)
 
         if email is None:
-            raise serializers.ValidationError("An email adress is required to login")
+            raise serializers.ValidationError(_("An email adress is required to login"))
        
         if password is None:
-            raise serializers.ValidationError("A password is required to login")
+            raise serializers.ValidationError(_("A password is required to login"))
         
 
         user = authenticate(username=email, password=password)
         
 
         if user is None:
-            raise serializers.ValidationError("User not found! Please check your email or password.")
+            raise serializers.ValidationError(_("User not found! Please check your email or password."))
         
 
         if check_cache(user.id):
-            raise serializers.ValidationError("The user is already logged in!") 
+            raise serializers.ValidationError(_("The user is already logged in!")) 
 
 
         if not user.is_active:
-            raise serializers.ValidationError("This user has been deavtivated")
+            raise serializers.ValidationError(_("This user has been deavtivated"))
         
         access_token = access_token_gen(user.pk)
         refresh_token = refresh_token_gen(user.pk)
@@ -127,19 +127,19 @@ class RefreshTokenSerializer(serializers.Serializer):
         password = attrs.get('password', None)
 
         if email is None:
-            raise serializers.ValidationError("An email adress is required to login")
+            raise serializers.ValidationError(_("An email adress is required to login"))
        
         if password is None:
-            raise serializers.ValidationError("A password is required to login")
+            raise serializers.ValidationError(_("A password is required to login"))
         
         user = authenticate(username=email, password=password)
 
         if user is None:
-            raise serializers.ValidationError("Refresh Token not found! Check if you are logged in.")
+            raise serializers.ValidationError(_("Refresh Token not found! Check if you are logged in."))
         
 
         if not user.is_active:
-            raise serializers.ValidationError("This user has been deavtivated")
+            raise serializers.ValidationError(_("This user has been deavtivated"))
         
         refresh_token = cache_getter(user_id=user.id)
 
@@ -162,7 +162,7 @@ class AccessTokenSerializer(serializers.Serializer):
         refresh_token = attrs.get('refresh_token', None)
 
         if refresh_token is None:
-            raise serializers.ValidationError("You must enter the refresh token in order to get access token")
+            raise serializers.ValidationError(_("You must enter the refresh token in order to get access token"))
        
         
         payload = token_decode(refresh_token)
@@ -211,11 +211,11 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 
                     return instance
                 else:
-                    raise serializers.ValidationError("New Passwords don't match!")
+                    raise serializers.ValidationError(_("New Passwords don't match!"))
             else:
-                raise serializers.ValidationError("New password or confirm password missing!")
+                raise serializers.ValidationError(_("New password or confirm password missing!"))
         else:
-            raise serializers.ValidationError("Old password is wrong!")
+            raise serializers.ValidationError(_("Old password is wrong!"))
         
 
 
@@ -229,7 +229,7 @@ class ForgetPasswordSerializer(serializers.Serializer):
         user = CustomUser.objects.get(email=email)
 
         if not user.exists():
-            raise serializers.ValidationError("User with this email does not exist!")
+            raise serializers.ValidationError(_("User with this email does not exist!"))
         
         msg = f"{settings.BASE_URL}/set-pass/{uuid4().hex}{user.id}/"
 
@@ -257,9 +257,9 @@ class SetNewPasswordSerializer(serializers.Serializer):
 
                 return instance
             else:
-                raise serializers.ValidationError("Passwords don't match!")
+                raise serializers.ValidationError(_("Passwords don't match!"))
         else:
-            raise serializers.ValidationError("password or confirm password missing!")
+            raise serializers.ValidationError(_("password or confirm password missing!"))
 
 
         
