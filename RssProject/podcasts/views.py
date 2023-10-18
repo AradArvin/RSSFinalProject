@@ -6,9 +6,6 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework import generics
 from rest_framework import filters
 
-
-from collections import defaultdict
-from django.db.models import Count, F
 from .models import *
 from .serializers import *
 from interactions.models import ViewdPodcasts
