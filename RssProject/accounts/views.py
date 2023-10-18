@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.generics import RetrieveUpdateAPIView, UpdateAPIView, GenericAPIView
 from rest_framework import status
-
+from django.utils.translation import gettext_lazy as _
 
 from .serializers import *
 from .renderers import UserJSONRenderer
@@ -144,7 +144,7 @@ class ChangePasswordView(UpdateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        msg = {'status': 'Password changed succesfully.'}
+        msg = {'status': _('Password changed succesfully.')}
         return Response(msg, status=status.HTTP_200_OK)
     
 
