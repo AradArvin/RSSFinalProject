@@ -20,7 +20,7 @@ build/
 
 # Local development
 venv/
-.env
+# .env
 .venv
 
 # Frontend
