@@ -1,0 +1,144 @@
+
+
+services:
+  app:
+    container_name: django-app
+    build: .
+    command: sh -c "python3 manage.py makemigrations accounts interactions podcasts && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - app:/app
+    networks:
+      - main
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    restart: always
+
+
+  db:
+    image: postgres:14
+    container_name: postgresql-db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+    networks:
+      - main
+    env_file:
+      - .env
+    restart: always
+
+  
+  elasticsearch:
+    image: elasticsearch:8.9.0
+    container_name: elasticsearch
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      xpack.security.enabled: 'false'
+    networks:
+      - main
+    ports:
+      - 9200:9200
+    mem_limit: 1g
+    restart: always
+
+
+  kibana:
+    image: kibana:8.9.0
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    networks:
+      - main
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch 
+
+
+  redis:
+    image: redis:7
+    container_name: redis
+    networks:
+      - main
+    volumes:
+      - redis:/redis
+
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    container_name: rabbitmq
+    networks:
+      - main
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_log:/var/log/rabbitmq
+
+
+  celery:
+    build: .
+    container_name: celery
+    command: celery -A config worker -l info
+    networks:
+      - main
+    volumes:
+      - celery:/celery
+    restart: always
+    depends_on:
+      - rabbitmq
+      - redis
+      - app
+
+
+  celery-beat:
+    build: .
+    container_name: celery-beat
+    command: celery -A config beat -l info
+    networks:
+      - main
+    volumes:
+      - celery-beat:/celery-beat
+    depends_on:
+      - rabbitmq
+      - redis
+      - app
+
+
+  message-queue:
+    build: .
+    container_name: rabbitmq-message-queue
+    command: python3 manage.py start_consumers
+    networks:
+      - main
+    volumes:
+      - queue:/var/lib/queue
+    depends_on:
+      - app
+      - rabbitmq
+    restart: always
+
+
+
+
+networks:
+  main:
+
+volumes:
+  app:
+  postgres-data:
+  redis:
+  rabbitmq_data:
+  rabbitmq_log:
+  celery:
+  celery-beat:
+  esdata:
+  queue:
